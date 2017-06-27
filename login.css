@@ -1,0 +1,38 @@
+.radioTipo{
+    width: 50%;
+}
+h1{
+    font-family: Arial;
+    color: rebeccapurple;
+    background-color: burlywood;
+    margin-top: 20px;
+    margin-bottom: 40p;
+}
+h2{
+    color: palevioletred;
+    font-family: Arial;
+}
+
+body{
+    background-color: papayawhip;
+}
+
+.form‐control{
+    margin-bottom: 10px;
+}
+
+label{
+    color: rosybrown;
+    font-family: Arial;
+}
+
+.btn‐primary{
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+#divT{
+        -webkit-column-count:2;
+
+}
+
+
