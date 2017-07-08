@@ -1,0 +1,19 @@
+{
+  "users": [],
+  "products": [],
+  "productSections": [],
+  "cart": [
+    {
+      "userId": 1,
+      "productsId": [
+        15
+      ]
+    },
+    {
+      "userId": 1,
+      "productsId": [
+        16
+      ]
+    }
+  ]
+}
