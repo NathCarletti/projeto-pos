@@ -1,18 +1,110 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ 
 </head>
 <body>
-    
-    <h1>PET SHOP - Venda de produtos para seu bichinho</h1>
-    <input type="busca" id="busca" placeholder="Busca">
-    <a href="index.html">Sair</a>
+        <!-- Navigation bar -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" 
+                    data-target="#bs-example-navbar-collapse-1"
+                    aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Petshop</a>
+            </div>
 
-    <h2>Compra</h2>
-    
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                <form class="navbar-form navbar-left">
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="O que você está procurando?">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Pesquisar</button>
+                        </span>
+                        </div>
+                        <!-- /input-group -->
+                    </div>
+                    <!-- /.col-lg-6 -->
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="carrinho.html">Carrinho <span class="badge">3</span></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Minha conta <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-toggle="modal" href="#myModal">Editar cadastro</a></li>
+                            <li><a href="#">Pedidos</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="index.html">Sair</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Editar cadastro:</h4>
+                        </div>
+                        <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="name" class="form-control" id="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="add">Address:</label>
+                                <input type="add" class="form-control" id="add">
+                            </div>
+                            <div class="form-group">
+                                <label for="card">Card number:</label>
+                                <input type="card" class="form-control" id="card">
+                            </div>
+                            <div class="form-group">
+                                <label for="tel">Phone:</label>
+                                <input type="tel" class="form-control" id="tel">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email address:</label>
+                                <input type="email" class="form-control" id="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="pwd">Password:</label>
+                                <input type="password" class="form-control" id="pwd">
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox"> Remember me</label>
+                            </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" data-dismiss="modal">Submit</button>
+                        </div>
+                    </div>
+                    </div><!-- Modal content-->
+                </div><!-- Modal -->
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/docs.min.js"></script>
 </body>
 </html>
