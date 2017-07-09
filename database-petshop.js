@@ -52,3 +52,10 @@ function deleteCartProduct(userId, productId) {
 // console.log(getCartProductsByUser(1))
 // console.log(getCartProducts())
 // deleteCartProduct(1)
+
+//expose methods
+module.exports = {
+    addCartProduct,
+    getCartProductsByUser,
+    deleteCartProduct
+}
