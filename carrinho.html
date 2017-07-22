@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Meu carrinho</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="carrinho.css">
+  <link rel="stylesheet" href="css/carrinho.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -73,30 +73,16 @@
 
     <!-- Table -->
     <table class="table-responsive">
-        <tr>
-            <th colspan="2" class="text-center">Produto</th>
-            <th class="text-center">Preço</th>
-            <th class="text-center">Quantidade</th>
-            <th class="text-center">Total</th>
-            <th></th>
-        </tr>
-        <tr>
-            <td class="text-center">
-                <img class="product-img" src="images/racao1.jpg" alt="...">
-            </td>
-
-            <td >Ração Premium 10Kg</td>
-            <td class="text-center">R$ 100,00</td>
-            <td class="text-center">
-                <input type="number" value="1" min="1" max="10" />
-            </td>
-            <td class="text-center">50</td>
-            <td class="text-center">
-
-                <button type="button" class="btn btn-xs btn-danger">Remover</button>
-
-            </td>
-        </tr>
+        <thead>
+            <tr>
+                <th colspan="2" class="text-center">Produto</th>
+                <th class="text-center">Preço</th>
+                <th class="text-center">Quantidade</th>
+                <th class="text-center">Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="products" ></tbody>
 
     </table>
 
@@ -104,12 +90,19 @@
         <div class="panel-footer">Total</div>
     </div>
 
-    <button type="button" class="btn btn-success">Finalizar</button>
+    <button id="btnSubmit" type="button" class="btn btn-success">Finalizar</button>
         <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
 
+
+    <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-messaging.js"></script>
+</script>
+
 <script src="js/bootstrap.min.js"></script>
-<script src="js/docs.min.js"></script>
+<script src="js/carrinho.js"></script>
 </body>
 </html>
