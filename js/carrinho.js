@@ -1,10 +1,12 @@
-var database = firebase.database();
+var database = firebase.database()
+
+var userId = 10 // TODO get real ID
+//var userId = firebase.auth().currentUser.uid;
 
 const submit = document.getElementById("btnSubmit")
 const table = document.getElementById("products")
+const loader = document.getElementById("loader")
 
-//var userId = firebase.auth().currentUser.uid;
-var userId = 10 // TODO get real ID
 function getAllUserCartItems() {
 
     database.ref('/cart/')
@@ -19,12 +21,18 @@ function getAllUserCartItems() {
 }
 
 getAllUserCartItems()
-
+var userCartProducts = new Array();
 function getProducts(cartProducts) {
+
+    // var userCartProducts = new Array();
+
     for(var key in cartProducts) {
+
         var product = cartProducts[key]
 
         getProductInfo(product.id, product.amount, function(productInfo) {
+
+            userCartProducts.push(productInfo)
 
             var id = productInfo.id
             var name = productInfo.name
@@ -34,19 +42,20 @@ function getProducts(cartProducts) {
             var totalAmount = productInfo.totalAmount
             var userAmount = productInfo.userAmount
 
-            console.log("----------------------------------------")
-            console.log("id: " + id)
-            console.log("name: " + name)
-            console.log("price: " + price)
-            console.log("imageUrl: " + imageUrl)
-            console.log("description: " + description)
-            console.log("totalAmount: " + totalAmount)
-            console.log("userAmount: " + userAmount)
+            //console.log("----------------------------------------")
+            //console.log("id: " + id)
+            //console.log("name: " + name)
+            //console.log("price: " + price)
+            //console.log("imageUrl: " + imageUrl)
+            //console.log("description: " + description)
+            //console.log("totalAmount: " + totalAmount)
+            //console.log("userAmount: " + userAmount)
 
             addRow(id, imageUrl, name, price, totalAmount, userAmount)
         });
-
     }
+
+    loader.parentNode.removeChild(loader);
 }
 
 function getProductInfo(productId, productAmount, callback) {
@@ -91,7 +100,7 @@ function addRow(id, image, name, price, totalAmount, userAmount) {
     //console.log("Total no carrinho do usuário: " + userAmount)
 
     let imgTag = '<img class="product-img" src="images/' + image +'" alt="...">'
-    let amountInput = '<input type="number" value="' + userAmount + '" min="1" max="' + totalAmount + '" />'
+    let amountInput = '<input type="number" value="' + userAmount + '" min="1" max="' + totalAmount + '" onkeyup="showMe(this)" />'
     let totalPrice = price * userAmount
     let delBtn = '<button type="button" class="btn btn-xs btn-danger" onclick="getId(this)">Remover</button>'
 
@@ -114,11 +123,15 @@ function getId(element) {
     let row = element.parentNode.parentNode.rowIndex - 1
     let column = element.parentNode.cellIndex
 
+    console.log("getId clicked")
+
+    var itemName = table.rows[row].cells[1].innerHTML
+    var clickedProduct = userCartProducts.find(i => i.name === itemName);
+
     // Get product
     if(element.tagName.toLowerCase() == "button"){
         // remove button clicked
 
-        //let userId = 10;
         //let productId = cartProducts[row].id
         // deleteCartProduct(userId, productId)
 
@@ -127,6 +140,17 @@ function getId(element) {
     } else if(element.tagName.toLowerCase() == "input") {
         // amount changed
 
+        console.log(table.rows[row].cells[3].innerHTML)
+
+        console.log("User changed amount item")
+
     }
 
+}
+
+function showMe(e) {
+// i am spammy!
+  alert(e.value);
+
+  console.log("input clicked")
 }
