@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Administrador</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+  <script src="js/Chart.js"></script> <!--chart-->
+  <link rel="stylesheet" href="css/grafico.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
  
@@ -22,7 +23,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Petshop</a>
+                <a class="navbar-brand" href="index.html">Petshop</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -114,7 +115,35 @@
                     </div>
                     </div><!-- Modal content-->
                 </div><!-- Modal -->
+    <section id="links"><!--acho q da p tirar isso-->
+        <div class="col-xs-2">
+            <div class="panel panel-default">
+            <div class="panel-heading"><h3>Produtos:</h3></div>
+            <div class="panel-body">
+                <ul>
+                    <li><a href="">Caminha de Cachorro</a></li>
+                    <li><a href="">Osso de Pano</a></li>
+                    <li><a href="">Osso </a></li>
+                    <li><a href="">Ração</a></li>
+                    <li><a href="">Todos</a></li>
+                </ul>
+            </div>
+        </div>
+        </div>
+    </section><!--links-->
+        <div class="col-xs-10">
+        <div class="panel panel-default">
+        <div class="panel-heading"><h3>Histórico de Vendas:</h3></div>
+        <div class="panel-body">
+            <div id="canvas-container">
+            <canvas id="myChart" width="200" height="200" class></canvas>
+            </div>
+
+        </div><!--panelB-->
+        </div><!--panelD-->
+        </div><!--Coluna-->
 <script src="js/bootstrap.min.js"></script>
 <script src="js/docs.min.js"></script>
+<script src="js/grafico.js"></script>
 </body>
 </html>
