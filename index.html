@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <title>Pet Shop - Principal</title>
+  <title>Pet Shop - Principal</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
         <!-- Navigation bar -->
@@ -42,7 +42,7 @@
                     <!-- /.col-lg-6 -->
                 </form>
                    <ul class="nav navbar-nav navbar-right">
-                    <li><a href="carrinho.html">Carrinho <span class="badge">3</span></a></li>
+                    <li><a href="#">Carrinho <span class="badge">3</span></a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Minha conta <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -67,11 +67,11 @@
                         <form>
                             <div class="form-group">
                                 <label for="email">Email address:</label>
-                                <input type="email" class="form-control" id="email">
+                                <input type="email" class="form-control" id="emailL">
                             </div>
                             <div class="form-group">
                                 <label for="pwd">Password:</label>
-                                <input type="password" class="form-control" id="pwd">
+                                <input type="password" class="form-control" id="pwdL">
                             </div>
                             <div class="checkbox">
                                 <label><input type="checkbox"> Remember me</label>
@@ -94,7 +94,7 @@
                         <h4 class="modal-title">Cadastro</h4>
                         </div>
                         <div class="modal-body">
-                        <form>
+                        <form id = "frm2" action = "/action_page.php">
                             <div class="form-group">
                                 <label for="name">Name:</label>
                                 <input type="name" class="form-control" id="name">
@@ -129,7 +129,8 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                        <button type="submit" class="btn btn-default" data-dismiss="modal">Submit</button>
+                        <button type="submit" id = "btnSub" class="btn btn-default" data-dismiss="modal" 
+                        onClick ="btnSub()">Submit</button>
                         </div>
                     </div>
                     </div><!-- Modal content-->
@@ -145,7 +146,7 @@
             <div class="panel-heading"><h3>Curiosidades:</h3></div>
             <div class="panel-body">
                 <ul>
-                    <li><a href="">Adestramento de Cães</a></li>
+                    <li><a href="">Adestramento</a></li>
                     <li><a href="">Cães</a></li>
                     <li><a href="">Gatos</a></li>
                     <li><a href="">Pássaros</a></li>
@@ -155,7 +156,8 @@
             </div>
         </div>
         </div>
-    </section><!--produtos-->
+    </section>
+    <!--produtos-->
     <div class="col-xs-10">
         <div class="panel panel-default">
         <div class="panel-heading"><h3>Produtos:</h3></div>
@@ -166,18 +168,69 @@
                         <a href="carrinho.html">
                         <img src="images/racao1.jpg" alt="..." style="width:100%" class="product-img">
                         <div class="caption">
-                            <p>Raçao</p>
+                            <p>Raçao-Grande</p>
+                            <p>R$ 30,00</p></br>
+                        </div>
+                        </a>
+                    </div><!--thumbnail-->
+                    </div>
+                    <div class="col-xs-2">
+                    <div class="thumbnail">
+                        <a href="carrinho.html">
+                        <img src="images/osso1.jpg" alt="..." style="width:100%" class="product-img">
+                        <div class="caption">
+                            <p>Osso Durabone</p>
                             <p>R$ 10,00</p></br>
                         </div>
                         </a>
                     </div><!--thumbnail-->
+                    </div>
+                    <div class="col-xs-2">
+                    <div class="thumbnail">
+                        <a href="carrinho.html">
+                        <img src="images/osso2.jpg" alt="..." style="width:100%" class="product-img">
+                        <div class="caption">
+                            <p>Osso de Pano</p>
+                            <p>R$ 7,00</p></br>
+                        </div>
+                        </a>
+                    </div><!--thumbnail-->
+                    </div>
+                    <div class="col-xs-2">
+                    <div class="thumbnail">
+                        <a href="carrinho.html">
+                        <img src="images/racao1.jpg" alt="..." style="width:100%" class="product-img">
+                        <div class="caption">
+                            <p>Raçao-Pequeno</p>
+                            <p>R$ 10,00</p></br>
+                        </div>
+                        </a>
+                    </div><!--thumbnail-->
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="thumbnail">
+                        <a href="carrinho.html">
+                        <img src="images/camadog.jpg" alt="..." style="width:100%" class="product-img">
+                        <div class="caption">
+                            <p>Cama de pano - Grande</p>
+                            <p>R$ 50,00</p></br>
+                        </div>
+                        </a>
+                    </div><!--thumbnail-->
                 </div><!--coluna-->
-            <div class="col-xs-2"><img class="product-img" src="images/racao1.jpg" alt="..."></div>
-            <div class="col-xs-2"><img class="product-img" src="images/racao1.jpg" alt="..."></div>
-            <div class="col-xs-2"><img class="product-img" src="images/racao1.jpg" alt="..."></div>
-            <div class="col-xs-2"><img class="product-img" src="images/racao1.jpg" alt="..."></div>
-        </div></div>
-    </div>
+             </div>
+            </div><!--linha-->
+        </div><!--panel-->
+        </div><!--panelDefaul-->
+    </div><!--colunaP-->
+    
+<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/firebase-initialization.js"></script>
+<script src="js/login.js"></script> <!--mudar para index.js-->
+<!--<script src="database-sample.json"></script>
+<script src="database.json"></script>
+<script src="node_modules/lowdb/dist/lowdb.js"></script>-->
+
 </body>
 </html>
