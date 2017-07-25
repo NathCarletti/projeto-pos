@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/carrinho.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 </head>
 <body>
@@ -88,10 +89,34 @@
     <div class="loader" id="loader"></div> 
 
     </div>
-        <div class="panel-footer">Total</div>
+        <div id="cartTotalPrice" class="panel-footer">Total</div>
     </div>
 
     <button id="btnSubmit" type="button" class="btn btn-success">Finalizar</button>
+
+    <!-- The Modal -->
+    <!-- <div id="myModal" class="modal"> -->
+
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Remover</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- Modal content -->
+                    <span id="modalText">Some text in the Modal..</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id = "modalBtnNo" class="btn btn-default" data-dismiss="modal" >Não</button>
+                    <button type="submit" id = "modalBtnYes" class="btn btn-default" data-dismiss="modal" >Sim</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
         <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

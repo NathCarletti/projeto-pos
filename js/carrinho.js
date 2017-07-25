@@ -6,6 +6,11 @@ var userId = 10 // TODO get real ID
 const submit = document.getElementById("btnSubmit")
 const table = document.getElementById("products")
 const loader = document.getElementById("loader")
+const modal = document.getElementById('myModal');
+const modalText = document.getElementById('modalText');
+const modalBtnYes = document.getElementById('modalBtnYes');
+const modalBtnNo = document.getElementById('modalBtnNo');
+const cartTotalPrice = document.getElementById('cartTotalPrice');
 
 function getAllUserCartItems() {
 
@@ -100,57 +105,140 @@ function addRow(id, image, name, price, totalAmount, userAmount) {
     //console.log("Total no carrinho do usuário: " + userAmount)
 
     let imgTag = '<img class="product-img" src="images/' + image +'" alt="...">'
-    let amountInput = '<input type="number" value="' + userAmount + '" min="1" max="' + totalAmount + '" onkeyup="showMe(this)" />'
+    let amountInput = '<input type="number" value="' + userAmount + '" min="1" max="' + totalAmount + '" onclick="inputChanged(this)" />'
     let totalPrice = price * userAmount
-    let delBtn = '<button type="button" class="btn btn-xs btn-danger" onclick="getId(this)">Remover</button>'
+    let delBtn = '<button type="button" class="btn btn-xs btn-danger" onclick="deleteItem(this)" href="#myModal" >Remover</button>'
 
     var t = "";
 
     var tr = '<tr tag>';
     tr += '<td class="text-center">' + imgTag + '</td>';
     tr += '<td class="text-center">' + name + '</td>';
-    tr += '<td class="text-center">' + "R$ " + price + '</td>';
+    tr += '<td class="text-center">' + formatMoney(price) + '</td>';
     tr += '<td class="text-center">' + amountInput + '</td>';
-    tr += '<td class="text-center">' + "R$ " + totalPrice + '</td>';
+    tr += '<td class="text-center">' + formatMoney(totalPrice) + '</td>';
     tr += '<td class="text-center">' + delBtn + '</td>';
     tr += '</tr>';
     t += tr;
         
-    document.getElementById("products").innerHTML += t;
+    table.innerHTML += t;
 }
 
-function getId(element) {
+function removeRow(row) {
+    table.deleteRow(row);
+}
+
+function deleteItem(element) {
+
+    let row = element.parentNode.parentNode.rowIndex - 1
+    
+    var clickedItem = getTableClickedItem(element)
+    console.log("Delete product: " + clickedItem.name)
+
+    modalText.textContent="Remover \"" + clickedItem.name + "\" do carrinho?";
+    modal.style.display = "block";
+    
+    modalBtnYes.onclick = function() {
+        console.log("Remover item " + clickedItem.name + " row: " + row)
+        // removeRow(row)
+        modal.style.display = "none";
+
+        firebaseDeleteProduct(clickedItem.id)
+    }
+}
+
+function inputChanged(element) {
+
+    let row = element.parentNode.parentNode.rowIndex - 1
+
+    var clickedItem = getTableClickedItem(element)
+
+    var newValue = element.value
+
+    console.log("Changed amount of product " + clickedItem.name + " to amount " + newValue)
+    var newTotal = formatMoney(newValue * clickedItem.price)
+
+    table.rows[row].cells[4].innerHTML = newTotal
+
+    cartTotalPrice.innerHTML = "Total: " + formatMoney(getCartTotalPrice())
+}
+
+function getCartTotalPrice() {
+
+    var total = 0.0
+
+    var totalRows = table.rows.length
+    
+    for(var i=0; i<totalRows; i++) {
+        var totalRow = table.rows[i].cells[4].innerHTML
+        total += formatNumber(totalRow)
+    }
+
+    return total
+}
+
+function formatMoney(num) {
+    return "R$ " + num.toFixed(2).toString().replace(".", ",");
+}
+
+function formatNumber(money) {
+    return Number(money.replace("R$ ", "").replace(",", "."));
+}
+
+function getTableClickedItem(element) {
     let row = element.parentNode.parentNode.rowIndex - 1
     let column = element.parentNode.cellIndex
 
-    console.log("getId clicked")
-
     var itemName = table.rows[row].cells[1].innerHTML
-    var clickedProduct = userCartProducts.find(i => i.name === itemName);
+    var clickedItem = userCartProducts.find(i => i.name === itemName);
 
-    // Get product
-    if(element.tagName.toLowerCase() == "button"){
-        // remove button clicked
-
-        //let productId = cartProducts[row].id
-        // deleteCartProduct(userId, productId)
-
-        console.log("Delete product of row: " + row)
-
-    } else if(element.tagName.toLowerCase() == "input") {
-        // amount changed
-
-        console.log(table.rows[row].cells[3].innerHTML)
-
-        console.log("User changed amount item")
-
-    }
-
+    return clickedItem;
 }
 
-function showMe(e) {
-// i am spammy!
-  alert(e.value);
 
-  console.log("input clicked")
+function firebaseDeleteProduct(id) {
+
+
+    database.ref('/cart/')
+            .orderByChild('userId')
+            .startAt(userId).endAt(userId)
+            .once('value').then(function(snapshot) {
+
+            var products = snapshot.val()[0].products
+            
+            for(var key in products) {
+                if(products[key].id == id) {
+                    console.log("Delete: " + products[key].id)
+                }
+            }
+
+            
+
+            //if( snapshot.val() === null ) {
+                /* does not exist */
+            //} else {
+            //    snapshot.ref().update({"postID": postID});
+            //}
+    });
+}
+
+
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+modalBtnNo.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
 }
