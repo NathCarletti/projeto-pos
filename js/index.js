@@ -28,8 +28,8 @@ function btnSub(){
            userCard,
            userEmail
        ]*/
-       writeUserData(11, userName, userAdd, userCard, userTel, userEmail);
-   /*
+       writeUserData(12, userName, userAdd, userCard, userTel, userEmail);
+      /*
 		userName.value='';
 		userAdd.value='';
 		userCard.value='';
@@ -38,7 +38,11 @@ function btnSub(){
 		userName.focus();*/
     }
 
-
+function btnLogin(){
+    var userEmailL = document.getElementById('emailL').value
+    var userPassL = document.getElementById('pwdL').value
+    loginUserData()
+}
 function writeUserData(userId, userName, userAdd, userCard, userTel, userEmail) {
   firebase.database().ref('users/' + userId).set({
     username: userName,
@@ -50,3 +54,4 @@ function writeUserData(userId, userName, userAdd, userCard, userTel, userEmail) 
 
 console.log('oi')
 }
+
