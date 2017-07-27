@@ -32,33 +32,65 @@ console.log('oi')
 
 //LIST product
 var products = new Array();
-listProductData()
-function listProductData(){
+function listaP(){
+  while(products.length){
+              products.pop()
+              //console.log(products)
+            }
     database.ref('products/').once('value').then(function(snapshot) {
-            products.push(snapshot.val()[0])
-            products.push(snapshot.val()[1])
-            products.push(snapshot.val()[2])
-            console.log(products)
-            function addProductHTML(products)
+      for(var i in snapshot.val()){
+        while(products.length){
+              products.pop()
+             // console.log(products)
+            }
+          console.log(i)
+            products.push(snapshot.val()[i].amount)
+            products.push(snapshot.val()[i].description)
+            products.push(snapshot.val()[i].name)
+            products.push(snapshot.val()[i].price)
+
+            listProductData(products)
+            while(products.length){
+              products.pop()
+              //console.log(products)
+            }
+      }
     })
-    
 }
 
-function addProductHTML(products) {
+function listProductData(products){
+  var productToDel = new Array();
+		var ul = document.getElementById('lista');
+		var max = ul.children.length;
+		var newLi = document.createElement('li');
+		//newLi.id='';
+		newLi.onclick = function(){
+		//ul.removeChild(newLi);
+		var list = document.getElementById('lista');
+		list.removeChild(this); //cara que foi clicado
+    console.log(this)
+      database.ref('products/').once('value').then(function(snapshot) {
+        for(var t=0;t<max;t++){
+			var listItem = ul.children[i];
+			
+			if(listItem.innerHTML == name.value){
+				alert('Já existe esse nome na lista!');
+				name.focus();
+				
+				return;
+			}
+        for(var i in snapshot.val()){
+          console.log(i)
+            productToDel.push(snapshot.val()[i].description)
+            productToDel.push(snapshot.val()[i].name)
+        }
+        }
+		  });
+    }
 
-    var html = "";
+		var liContent = document.createTextNode(products);
+    productToDel = products
 
-    var html = '<div class="col-xs-2">';
-    html += '<div class="thumbnail">';
-    html += '<img src="images/' + products.imageUrl + '" alt="..." style="width:100%" class="product-img">';
-    html += '<div class="caption">';
-    html += '<p>' + products.name + '</p>';
-    html += '<p>' + formatMoney(products.prc) + '</p>';
-    html += '<button type="submit" class="btn btn-xs btn-success" onclick="addToCart(' + products.id + ')" >Adicionar ao carrinho</button>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';
-    //t += html;
-        
-    productsDiv.innerHTML += html;
-}
+		newLi.appendChild(liContent);
+		ul.appendChild(newLi);
+};
