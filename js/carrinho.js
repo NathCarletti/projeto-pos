@@ -205,12 +205,37 @@ function firebaseDeleteProduct(id) {
             .once('value').then(function(snapshot) {
 
             var products = snapshot.val()[0].products
+            var key = snapshot.key
+
+            console.log("key: "+ key) // .items.splice(1, 1);
             
-            for(var key in products) {
-                if(products[key].id == id) {
-                    console.log("Delete: " + products[key].id)
+            /*products.child*/
+            var newProducts = new Array();
+            for(var i in products) {
+                if(products[i].id != id) {
+                    newProducts.push(products[i].id)
+
+                    console.log("Adicionando: " + products[i].id)
+
+                } else {
+                    console.log("Removendo: " + products[i].id)
                 }
             }
+
+
+            var userCart = {
+                products: newProducts,
+                userId: userId
+            };
+
+            console.log(userCart.products)
+
+            // Write the new post's data simultaneously in the posts list and the user's post list.
+            var updates = {};
+            updates['/cart/' + 0] = userCart;
+            //updates['/user-posts/' + uid + '/' + newPostKey] = postData;
+
+            //firebase.database().ref().update(updates);
 
             
 
