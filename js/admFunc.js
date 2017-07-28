@@ -7,17 +7,16 @@ function btnConfirm(){
     var image = document.getElementById('img').value
     var prodName= document.getElementById('name').value
     var prc = document.getElementById('prc').value
-    
+
     writeProductData(id, amnt, desc, image, prodName, prc);
-      /*
 		userName.value='';
 		userAdd.value='';
 		userCard.value='';
 		userTel.value='';
 		userEmail.value='';
-		userName.focus();*/
+		userName.focus();
 }
-
+//WRITE on Firebase
 function writeProductData(id, amnt, desc, image, prodName, prc) {
   database.ref('/products/' + id).set({
     amount: amnt,
@@ -33,17 +32,20 @@ console.log('oi')
 //LIST product
 var products = new Array();
 function listaP(){
+  var i=0
   while(products.length){
               products.pop()
-              //console.log(products)
             }
+    clearList()
     database.ref('products/').once('value').then(function(snapshot) {
       for(var i in snapshot.val()){
+       //for( i=0;i<snapshot.val().length;i++){
         while(products.length){
               products.pop()
-             // console.log(products)
             }
-          console.log(i)
+            console.log(snapshot.val())
+            console.log(products)
+            console.log(i)
             products.push(snapshot.val()[i].amount)
             products.push(snapshot.val()[i].description)
             products.push(snapshot.val()[i].name)
@@ -52,51 +54,62 @@ function listaP(){
             listProductData(products)
             while(products.length){
               products.pop()
-              //console.log(products)
+              console.log(products)
             }
       }
     })
 }
-
+//CREATE list
 function listProductData(products){
-  var productToDel = new Array();
-		var ul = document.getElementById('lista');
-		var newLi = document.createElement('li');
-		//newLi.id='';
-		newLi.onclick = function(){
-		//ul.removeChild(newLi);
-		var list = document.getElementById('lista');
-		  list.removeChild(this); //cara que foi clicado
-      database.ref('products/').once('value').then(function(snapshot) {
-        var max = ul.children.length;
-        for(var i in snapshot.val()){
-          for(var t=0;t<max;t++){
-            var listItem = ul.children[t];
-            //console.log(listItem)
-            //console.log(ul.children[t])
-			    if(listItem === snapshot.val()[i]){
-            console.log('oi')
-          }else{//remove(snapshot.val()[i])
-            console.log(listItem)
-            console.log(snapshot.val()[i])
-        }
-      }
-    }
-  })
-    }
-		var liContent = document.createTextNode(products);
-    productToDel = products
+		var ul = document.getElementById('lista')
+		var newLi = document.createElement('li')
+		var liContent = document.createTextNode(products)
 
-		newLi.appendChild(liContent);
-		ul.appendChild(newLi);
+		newLi.appendChild(liContent)
+		ul.appendChild(newLi)
+}
+//CLEAR list before generate another
+function clearList(){
+  var ul = document.getElementById('lista')
+  var list = document.getElementsByTagName('li')
+  for(var i=0;i<ul.children.length;i++){
+    ul.removeChild(ul.children[i])
+  }
 }
 
+//DELETE object from Firebase
 function btnDel(){
   var name = document.getElementById('pName').value
   console.log(name)
     database.ref('products/').orderByChild('name').equalTo(name).on('child_added', (snapshot) => {
      snapshot.ref.remove()
   })
+}
+
+//Catch name to be edited
+function nextEdit(){
+    var nameToEd = document.getElementById('editName').value
+   
+}
+ function btnEd(){
+      var id= document.getElementById('idE').value
+      var amnt=document.getElementById('amntE').value
+      var desc = document.getElementById('descE').value
+      var image = document.getElementById('imgE').value
+      var prodName= document.getElementById('nameE').value
+      var prc = document.getElementById('prcE').value
+
+    console.log(name)
+    /*database.ref('products/').orderByChild('name').equalTo(nameToEd).on('child_changed', (snapshot) => {
+      snapshot.ref.update({
+        id: id,
+        amount: amnt,
+        description: desc,
+        imageURL: image,
+        name: prodName,
+        price: prc
+      })
+  })*/
 }
 
   //var ref = firebase.database().ref('products/');
