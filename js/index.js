@@ -170,7 +170,7 @@ function sampleUsingSessionStorage() {
 }
 sampleUsingSessionStorage()
 
-localStorage.removeItem("cart");
+// localStorage.removeItem("cart");
 updateCartItemsCountInNavigationBar()
 
 function addToCart(productId) {
