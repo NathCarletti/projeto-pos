@@ -19,12 +19,12 @@ function btnConfirm(){
 }
 
 function writeProductData(id, amnt, desc, image, prodName, prc) {
-  database.ref('/products/' + id).set({
-    amount: amnt,
+  database.ref('/products/' + Number(id)).set({
+    amount: Number(amnt),
     description: desc,
     imageURL: image,
     name: prodName,
-    price: prc
+    price: formatNumber(prc)
   });
 
 console.log('oi')
@@ -107,3 +107,7 @@ function btnDel(){
      //});
      //ref.update(updates);
 //});
+
+function formatNumber(money) {
+    return Number(money.replace("R$ ", "").replace(",", "."));
+}
