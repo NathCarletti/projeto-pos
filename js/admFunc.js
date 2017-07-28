@@ -99,7 +99,6 @@ function btnDel(){
   })
 }
 
-  //database.ref('products/').child('name').equalTo(name).remove()
   //var ref = firebase.database().ref('products/');
   //ref.orderByChild('name').equalTo(name).once("value", function(snapshot){
     // var updates = {};
