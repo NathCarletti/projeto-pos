@@ -61,36 +61,50 @@ function listaP(){
 function listProductData(products){
   var productToDel = new Array();
 		var ul = document.getElementById('lista');
-		var max = ul.children.length;
 		var newLi = document.createElement('li');
 		//newLi.id='';
 		newLi.onclick = function(){
 		//ul.removeChild(newLi);
 		var list = document.getElementById('lista');
-		list.removeChild(this); //cara que foi clicado
-    console.log(this)
+		  list.removeChild(this); //cara que foi clicado
       database.ref('products/').once('value').then(function(snapshot) {
-        for(var t=0;t<max;t++){
-			var listItem = ul.children[i];
-			
-			if(listItem.innerHTML == name.value){
-				alert('Já existe esse nome na lista!');
-				name.focus();
-				
-				return;
-			}
+        var max = ul.children.length;
         for(var i in snapshot.val()){
-          console.log(i)
-            productToDel.push(snapshot.val()[i].description)
-            productToDel.push(snapshot.val()[i].name)
+          for(var t=0;t<max;t++){
+            var listItem = ul.children[t];
+            //console.log(listItem)
+            //console.log(ul.children[t])
+			    if(listItem === snapshot.val()[i]){
+            console.log('oi')
+          }else{//remove(snapshot.val()[i])
+            console.log(listItem)
+            console.log(snapshot.val()[i])
         }
-        }
-		  });
+      }
     }
-
+  })
+    }
 		var liContent = document.createTextNode(products);
     productToDel = products
 
 		newLi.appendChild(liContent);
 		ul.appendChild(newLi);
-};
+}
+
+function btnDel(){
+  var name = document.getElementById('pName').value
+  console.log(name)
+    database.ref('products/').orderByChild('name').equalTo(name).on('child_added', (snapshot) => {
+     snapshot.ref.remove()
+  })
+}
+
+  //database.ref('products/').child('name').equalTo(name).remove()
+  //var ref = firebase.database().ref('products/');
+  //ref.orderByChild('name').equalTo(name).once("value", function(snapshot){
+    // var updates = {};
+      //snapshot.forEach(function(child){
+        //  updates[child.name] = null;
+     //});
+     //ref.update(updates);
+//});
