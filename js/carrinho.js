@@ -1,8 +1,10 @@
+// DEFINING FIREBASE DATABASE VARIABLE 
 var database = firebase.database()
 
+// GETTING USER LOGGED ID
 var userId = 10 // TODO get real ID
-//var userId = firebase.auth().currentUser.uid;
 
+// GETTING HTML ELEMENTS
 const submit = document.getElementById("btnSubmit")
 const table = document.getElementById("products")
 const loader = document.getElementById("loader")
@@ -12,55 +14,88 @@ const modalBtnYes = document.getElementById('modalBtnYes');
 const modalBtnNo = document.getElementById('modalBtnNo');
 const cartTotalPrice = document.getElementById('cartTotalPrice');
 
-function getAllUserCartItems() {
+// THINGS TO DO AS SOON AS THE PAGE LOADS
+updateCartItemsCountInNavigationBar()
+populateTable(getAllUserCartItems())
 
-    database.ref('/cart/')
-        .orderByChild('userId')
-        .startAt(userId).endAt(userId)
-        .once('value').then(function(snapshot) {
+// localStorage.removeItem("cart");
 
-        var allUserCartProducts = snapshot.val()[0].products
+function updateCartItemsCountInNavigationBar() {
+    var itemsCount = getCartItemsCount();
 
-        getProducts(allUserCartProducts)
-    });
+    var badgeCart = document.getElementById('badgeCart')
+    badgeCart.innerHTML = itemsCount
 }
 
-getAllUserCartItems()
-var userCartProducts = new Array();
-function getProducts(cartProducts) {
+function getCartItemsCount() {
 
-    // var userCartProducts = new Array();
+    var currentCartItems = getAllUserCartItems()
+    var currentCartItemsCount = 0
 
-    for(var key in cartProducts) {
-
-        var product = cartProducts[key]
-
-        getProductInfo(product.id, product.amount, function(productInfo) {
-
-            userCartProducts.push(productInfo)
-
-            var id = productInfo.id
-            var name = productInfo.name
-            var price = productInfo.price
-            var imageUrl = productInfo.imageUrl
-            var description = productInfo.description
-            var totalAmount = productInfo.totalAmount
-            var userAmount = productInfo.userAmount
-
-            //console.log("----------------------------------------")
-            //console.log("id: " + id)
-            //console.log("name: " + name)
-            //console.log("price: " + price)
-            //console.log("imageUrl: " + imageUrl)
-            //console.log("description: " + description)
-            //console.log("totalAmount: " + totalAmount)
-            //console.log("userAmount: " + userAmount)
-
-            addRow(id, imageUrl, name, price, totalAmount, userAmount)
-        });
+    if(currentCartItems != null) {
+        currentCartItemsCount = currentCartItems.length
     }
 
-    loader.parentNode.removeChild(loader);
+    return currentCartItemsCount
+}
+
+function getAllUserCartItems() {
+
+    var currentCartItems = localStorage.cart
+
+    if(currentCartItems) {
+
+        var allItems = new Array()
+        allItems = JSON.parse(localStorage.cart)
+
+        return allItems
+    }
+}
+
+var userCartProducts = new Array();
+function populateTable(cartProducts) {
+
+    if(cartProducts != null) {
+
+        console.log("Getting products...")
+
+        // var userCartProducts = new Array();
+
+        for(var key in cartProducts) {
+
+            var product = cartProducts[key]
+
+            getProductInfo(product.id, product.amount, function(productInfo) {
+
+                userCartProducts.push(productInfo)
+
+                var id = productInfo.id
+                var name = productInfo.name
+                var price = productInfo.price
+                var imageUrl = productInfo.imageUrl
+                var description = productInfo.description
+                var totalAmount = productInfo.totalAmount
+                var userAmount = productInfo.userAmount
+
+                addRow(id, imageUrl, name, price, totalAmount, userAmount)
+            });
+        }
+    } else {
+        console.log("Your cart is empty")
+
+        var t = "";
+
+        var tr = '<tr tag>';
+        tr += '<td colspan="5" class="text-center" ><span>Seu carrinho está vazio.<span></td>';
+        tr += '</tr>';
+        t += tr;
+            
+        table.innerHTML += t;
+    }
+    
+    if(loader.parentNode != null) {
+        loader.parentNode.removeChild(loader);
+    }
 }
 
 function getProductInfo(productId, productAmount, callback) {
@@ -85,15 +120,6 @@ function getProductInfo(productId, productAmount, callback) {
         });
 }
 
-/*remove.addEventListener('click', function(event) {
-    console.log("Remove action")
-
-    var rowLength = table.rows.length;
-    console.log("quantidade de itens: " + (rowLength-1))
-
-    console.log("Id do selecionado: " + table.innerHTML)
-})*/
-
 submit.addEventListener('click', function(event) {
     console.log("Submit action")
 })
@@ -105,9 +131,9 @@ function addRow(id, image, name, price, totalAmount, userAmount) {
     //console.log("Total no carrinho do usuário: " + userAmount)
 
     let imgTag = '<img class="product-img" src="images/' + image +'" alt="...">'
-    let amountInput = '<input type="number" value="' + userAmount + '" min="1" max="' + totalAmount + '" onclick="inputChanged(this)" />'
+    let amountInput = '<input type="number" value="' + userAmount + '" min="1" max="' + totalAmount + '" onclick="inputChanged('+ id +', this)" />'
     let totalPrice = price * userAmount
-    let delBtn = '<button type="button" class="btn btn-xs btn-danger" onclick="deleteItem(this)" href="#myModal" >Remover</button>'
+    let delBtn = '<button type="button" class="btn btn-xs btn-danger" onclick="deleteItem('+ id +', this)" href="#myModal" >Remover</button>'
 
     var t = "";
 
@@ -128,7 +154,7 @@ function removeRow(row) {
     table.deleteRow(row);
 }
 
-function deleteItem(element) {
+function deleteItem(id, element) {
 
     let row = element.parentNode.parentNode.rowIndex - 1
     
@@ -140,14 +166,35 @@ function deleteItem(element) {
     
     modalBtnYes.onclick = function() {
         console.log("Remover item " + clickedItem.name + " row: " + row)
-        // removeRow(row)
+        
+        removeRow(row)
         modal.style.display = "none";
 
-        firebaseDeleteProduct(clickedItem.id)
+        var allItems = getAllUserCartItems()
+        var index = allItems.findIndex(item => item.id === id)
+
+        allItems.splice(index)
+
+        if(allItems.length <= 0) {
+            localStorage.removeItem("cart");
+        } else {
+            updateLocalStorage(allItems)
+        }
+
+        populateTable(getAllUserCartItems())
     }
 }
 
-function inputChanged(element) {
+function updateLocalStorage(allItems) {
+
+    var jsonString = JSON.stringify(allItems);
+
+    localStorage.cart = jsonString
+
+    updateCartItemsCountInNavigationBar()
+}
+
+function inputChanged(id, element) {
 
     let row = element.parentNode.parentNode.rowIndex - 1
 
@@ -156,11 +203,19 @@ function inputChanged(element) {
     var newValue = element.value
 
     console.log("Changed amount of product " + clickedItem.name + " to amount " + newValue)
+
     var newTotal = formatMoney(newValue * clickedItem.price)
 
     table.rows[row].cells[4].innerHTML = newTotal
 
     cartTotalPrice.innerHTML = "Total: " + formatMoney(getCartTotalPrice())
+
+    var allItems = getAllUserCartItems()
+    var itemIndex = allItems.findIndex(item => item.id === id)
+
+    allItems[itemIndex].amount = newValue
+
+    updateLocalStorage(allItems)
 }
 
 function getCartTotalPrice() {
@@ -196,21 +251,45 @@ function getTableClickedItem(element) {
 }
 
 
-function firebaseDeleteProduct(id) {
+//function firebaseDeleteProduct(id) {
 
+//    database.ref('/cart/')
+//            .orderByChild('userId')
+//            .startAt(userId).endAt(userId)
+//            .once('value').then(function(snapshot) {
 
-    database.ref('/cart/')
-            .orderByChild('userId')
-            .startAt(userId).endAt(userId)
-            .once('value').then(function(snapshot) {
+//            var products = snapshot.val()[0].products
+//            var key = snapshot.key
 
-            var products = snapshot.val()[0].products
+//            console.log("key: "+ key) // .items.splice(1, 1);
             
-            for(var key in products) {
-                if(products[key].id == id) {
-                    console.log("Delete: " + products[key].id)
-                }
-            }
+            /*products.child*/
+//            var newProducts = new Array();
+//            for(var i in products) {
+//                if(products[i].id != id) {
+//                    newProducts.push(products[i].id)
+
+//                    console.log("Adicionando: " + products[i].id)
+
+//                } else {
+//                    console.log("Removendo: " + products[i].id)
+//                }
+//            }
+
+
+//            var userCart = {
+//                products: newProducts,
+//                userId: userId
+//            };
+
+//            console.log(userCart.products)
+
+            // Write the new post's data simultaneously in the posts list and the user's post list.
+//            var updates = {};
+//            updates['/cart/' + 0] = userCart;
+            //updates['/user-posts/' + uid + '/' + newPostKey] = postData;
+
+            //firebase.database().ref().update(updates);
 
             
 
@@ -219,8 +298,8 @@ function firebaseDeleteProduct(id) {
             //} else {
             //    snapshot.ref().update({"postID": postID});
             //}
-    });
-}
+//    });
+//}
 
 
 
