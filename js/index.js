@@ -171,6 +171,8 @@ function sampleUsingSessionStorage() {
 sampleUsingSessionStorage()
 
 localStorage.removeItem("cart");
+updateCartItemsCountInNavigationBar()
+
 function addToCart(productId) {
     
     var currentCartItems = localStorage.cart
@@ -209,6 +211,32 @@ function addItemLocalStorage(allItems, itemIdToAdd) {
     var jsonString = JSON.stringify(allItems);
 
     localStorage.cart = jsonString
+
+    updateCartItemsCountInNavigationBar()
+}
+
+function updateCartItemsCountInNavigationBar() {
+    var itemsCount = getCartItemsCount();
+
+    var badgeCart = document.getElementById('badgeCart')
+    badgeCart.innerHTML = itemsCount
+
+}
+
+function getCartItemsCount() {
+
+    var currentCartItems = localStorage.cart
+    var currentCartItemsCount = 0
+
+    if(currentCartItems) {
+
+        var allItems = new Array()
+        allItems = JSON.parse(localStorage.cart)
+
+        currentCartItemsCount = allItems.length
+    }
+
+    return currentCartItemsCount
 }
 
 
