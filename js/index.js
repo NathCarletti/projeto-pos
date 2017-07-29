@@ -39,11 +39,13 @@ function btnSub(){
 		userName.focus();*/
     }
 
-function btnLogin(){
+function btnLogin() {
     var userEmailL = document.getElementById('emailL').value
     var userPassL = document.getElementById('pwdL').value
+    
     loginUserData(userEmailL,userPassL)
 }
+
 function writeUserData(userId, userName, userAdd, userCard, userTel, userEmail) {
   database.ref('users/' + userId).set({
     username: userName,
@@ -56,25 +58,30 @@ function writeUserData(userId, userName, userAdd, userCard, userTel, userEmail) 
 console.log('oi')
 }
 
-var emails = new Array();
-var pass = new Array();
-function loginUserData(userEmailL,userPassL){
+function loginUserData(userEmailL, userPassL) {
     database.ref('users/')
+
+        .orderByChild('email')
+        .startAt(userEmailL).endAt(userEmailL)
         .once('value').then(function(snapshot) {
-            //emails.push(snapshot.val()[10].email)
-            emails.push(snapshot.val()[11].email)
-            emails.push(snapshot.val()[12].email)
-            console.log(emails) //TODO password
-            for(var key =0;key<emails.length;key++){
-                if((userEmailL===emails[key])&&(userPassL===pass)){
-                    console.log(userEmailL)
-                    console.log(emails[key])
-                    window.location="cliente.html";
-                }
-		}
+
+        if(snapshot.val() != null) {
+
+            // Email exists on database.
+            // Check password
+            var storedPass = snapshot.val()[0].pass
+
+            if(storedPass == userPassL) {
+                console.log("Login")
+            } else {
+                console.log("Wrong password")
+            }
+
+        } else {
+            console.log("This email is not registered yet.")
+        }
     });
 }
-
 
 var userId = 10 // TODO get real ID
 
@@ -160,7 +167,7 @@ function sampleUsingLocalStorage() {
     localStorage.removeItem("lastname");
 }
 
-function sampleUsingSessionStorage() {
+/*function sampleUsingSessionStorage() {
     if (sessionStorage.myName) {
         sessionStorage.myName = Number(sessionStorage.myName) + 1;
     } else {
@@ -168,7 +175,7 @@ function sampleUsingSessionStorage() {
     }
     console.log("You have clicked the button " + sessionStorage.myName + " time(s) in this session.")
 }
-sampleUsingSessionStorage()
+sampleUsingSessionStorage()*/
 
 // localStorage.removeItem("cart");
 updateCartItemsCountInNavigationBar()
@@ -239,4 +246,23 @@ function getCartItemsCount() {
     return currentCartItemsCount
 }
 
+var menuDefault = document.getElementById('menuDefault')
+var menuUserLoggedIn = document.getElementById('menuUserLoggedIn')
 
+updateNavBarMenu()
+
+function updateNavBarMenu() {
+
+    // Handling user login
+    if(loggedUserId = getUserIdLogged()) {
+        console.log("The user with ID " + loggedUserId + "is logged")
+        menuUserLoggedIn.parentNode.removeChild(menuUserLoggedIn);
+    } else {
+        console.log("There is no user logged")
+        menuDefault.parentNode.removeChild(menuDefault);
+    }
+}
+
+function getUserIdLogged() {
+    return sessionStorage.loggedUserId
+}

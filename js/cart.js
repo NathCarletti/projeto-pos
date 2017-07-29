@@ -321,3 +321,25 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+
+
+var menuDefault = document.getElementById('menuDefault')
+var menuUserLoggedIn = document.getElementById('menuUserLoggedIn')
+
+updateNavBarMenu()
+
+function updateNavBarMenu() {
+
+    // Handling user login
+    if(loggedUserId = getUserIdLogged()) {
+        console.log("The user with ID " + loggedUserId + "is logged")
+        menuUserLoggedIn.parentNode.removeChild(menuUserLoggedIn);
+    } else {
+        console.log("There is no user logged")
+        menuDefault.parentNode.removeChild(menuDefault);
+    }
+}
+
+function getUserIdLogged() {
+    return sessionStorage.loggedUserId
+}
