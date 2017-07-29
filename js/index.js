@@ -298,3 +298,10 @@ function getUserIdLogged() {
 function setUserIdLogged(userId) {
     sessionStorage.loggedUserId = userId
 }
+
+function logout() {
+    sessionStorage.removeItem("loggedUserId")
+    updateNavBarMenu()
+
+    console.log("You have successfully logout!")
+}
