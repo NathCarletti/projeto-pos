@@ -59,6 +59,8 @@ function writeUserData(userId, userName, userAdd, userCard, userTel, userEmail) 
     });
 }
 
+
+const modalLogin = document.getElementById('modalLogin');
 function loginUserData(userEmailValue, userPassValue) {
     userPassL.parentNode.classList.remove("has-error")
     userEmailL.parentNode.classList.remove("has-error")
@@ -77,6 +79,18 @@ function loginUserData(userEmailValue, userPassValue) {
 
                 if (storedPass == userPassValue) {
                     console.log("Login")
+                    //modalLogin.style.display = "none";
+                    modalLogin.style.display = 'none';
+
+                    var dimmer = document.getElementsByClassName('modal-backdrop');
+                    //dimmer.parentNode.removeChild(dimmer);
+
+                    //document.body.removeChild(dimmer)
+
+                    var userId = snapshot.val()[0].id
+                    setUserIdLogged(userId)
+                    updateNavBarMenu()
+
                 } else {
                     console.log("Wrong password")
                     userPassL.parentNode.classList.add("has-error")
@@ -89,15 +103,12 @@ function loginUserData(userEmailValue, userPassValue) {
         });
 }
 
-var userId = 10 // TODO get real ID
-
 const productsDiv = document.getElementById("products")
 const loader = document.getElementById("loader")
 
 function getAllUserCartItems(callback) {
 
     console.log("Getting products...")
-
 
     var allProducts = new Array()
 
@@ -262,13 +273,28 @@ function updateNavBarMenu() {
     // Handling user login
     if (loggedUserId = getUserIdLogged()) {
         console.log("The user with ID " + loggedUserId + "is logged")
-        menuUserLoggedIn.parentNode.removeChild(menuUserLoggedIn);
+        // menuUserLoggedIn.parentNode.removeChild(menuUserLoggedIn);
+        //menuDefault.style.visibility = 'hidden';
+        //menuUserLoggedIn.style.visibility = 'visible';
+
+        menuDefault.style.visibility = 'visible';
+        menuUserLoggedIn.style.visibility = 'hidden';
+
     } else {
         console.log("There is no user logged")
-        menuDefault.parentNode.removeChild(menuDefault);
+        // menuDefault.parentNode.removeChild(menuDefault);
+        //menuDefault.style.visibility = 'visible';
+        //menuUserLoggedIn.style.visibility = 'hidden';
+
+        menuDefault.style.visibility = 'hidden';
+        menuUserLoggedIn.style.visibility = 'visible';
     }
 }
 
 function getUserIdLogged() {
     return sessionStorage.loggedUserId
+}
+
+function setUserIdLogged(userId) {
+    sessionStorage.loggedUserId = userId
 }
