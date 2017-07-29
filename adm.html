@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>Petshop - Administrador</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="js/Chart.js"></script> <!--chart-->
-  <link rel="stylesheet" href="css/grafico.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- 
+    <title>Petshop - Administrador</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/Chart.js"></script>
+    <!--chart-->
+    <link rel="stylesheet" href="css/grafico.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 </head>
+
 <body>
-        <!-- Navigation bar -->
+    <!-- Navigation bar -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                data-target="#bs-example-navbar-collapse-1"
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
                     aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
@@ -31,8 +33,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                        aria-haspopup="true" aria-expanded="false">Produtos <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Produtos <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a data-toggle="modal" href="#add">Adicionar</a></li>
                             <li><a data-toggle="modal" href="#edit">Editar</a></li>
@@ -49,186 +50,181 @@
         <!-- /.container-fluid -->
     </nav>
     <!-- Modal -->
-                <div class="modal fade" id="add" role="dialog">
-                    <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                       <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-                        <h4 class="modal-title">Adicionar Produto</h4>
-                        </div>
-                        <div class="modal-body">
-                        <form id = "frm2" action = "/action_page.php">
-                            <div class="form-group">
-                                <label for="id">Id:</label>
-                                <input type="id" class="form-control" id="id">
-                            </div>
-                            <div class="form-group">
-                                <label for="amnt">Quantidade:</label>
-                                <input type="amnt" class="form-control" id="amnt">
-                            </div>
-                            <div class="form-group">
-                                <label for="desc">Descrição:</label>
-                                <input type="desc" class="form-control" id="desc">
-                            </div>
-                            <div class="form-group">
-                                <label for="img">imagemURL:</label>
-                                <input type="img" class="form-control" id="img">
-                            </div>
-                            <div class="form-group">
-                                <label for="name">Name:</label>
-                                <input type="name" class="form-control" id="name">
-                            </div>
-                            <div class="form-group">
-                                <label for="prc">Preço:</label>
-                                <input type="prc" class="form-control" id="prc">
-                            </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="submit" id = "btnSub" class="btn btn-default" data-dismiss="modal"
-                        onClick ="btnConfirm()">Confirmar</button>
-                        </div>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
-                        </div>
-                    </div>
-                    </div><!-- Modal content-->
-                </div><!-- Modal -->
-                <!-- Modal -->
-                <div class="modal fade" id="edit" role="dialog">
-                    <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                       <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-                        <h4 class="modal-title">Editar Produto</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="editName">Nome do Produto:</label>
-                                <input type="editName" class="form-control" id="editName">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1" onClick = "nextEdit()">Próximo</button>
-                        </div>
-                    </div>
-                    </div><!-- Modal content-->
-                </div><!-- Modal -->
-                <!-- Modal -->
-                <div class="modal fade" id="del" role="dialog">
-                    <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                       <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-                        <h4 class="modal-title">Deletar Produto</h4>
-                        </div>
-                        <div class="modal-body">
+    <div class="modal fade" id="add" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                    <h4 class="modal-title">Adicionar Produto</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="frm2" action="/action_page.php">
                         <div class="form-group">
-                                <label for="pName">Nome do Produto:</label>
-                                <input type="productName" class="form-control" id="pName">
-                            </div>
+                            <label for="id">Id:</label>
+                            <input type="id" class="form-control" id="id">
                         </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" onClick = "btnDel()">Deletar</button>
+                        <div class="form-group">
+                            <label for="amnt">Quantidade:</label>
+                            <input type="amnt" class="form-control" id="amnt">
                         </div>
-                    </div>
-                    </div><!-- Modal content-->
-                </div><!-- Modal -->
-                <!--Modal de Edição-->
-                <div class="modal fade" id="myModal1" role="dialog">
-                    <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                       <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
-                        <h4 class="modal-title">Editar Produto</h4>
+                        <div class="form-group">
+                            <label for="desc">Descrição:</label>
+                            <input type="desc" class="form-control" id="desc">
                         </div>
-                        <div class="modal-body">
-                        <form id = "frm2" action = "/action_page.php">
-                            <div class="form-group">
-                                <label for="id">Id:</label>
-                                <input type="id" class="form-control" id="idE">
-                            </div>
-                            <div class="form-group">
-                                <label for="amnt">Quantidade:</label>
-                                <input type="amnt" class="form-control" id="amntE">
-                            </div>
-                            <div class="form-group">
-                                <label for="desc">Descrição:</label>
-                                <input type="desc" class="form-control" id="descE">
-                            </div>
-                            <div class="form-group">
-                                <label for="img">imagemURL:</label>
-                                <input type="img" class="form-control" id="imgE">
-                            </div>
-                            <div class="form-group">
-                                <label for="name">Nome:</label>
-                                <input type="name" class="form-control" id="nameE">
-                            </div>
-                            <div class="form-group">
-                                <label for="prc">Preço:</label>
-                                <input type="prc" class="form-control" id="prcE">
-                            </div>
-                            </form>
+                        <div class="form-group">
+                            <label for="img">imagemURL:</label>
+                            <input type="img" class="form-control" id="img">
                         </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" onClick = "btnEd()">Editar</button>
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="name" class="form-control" id="name">
                         </div>
+                        <div class="form-group">
+                            <label for="prc">Preço:</label>
+                            <input type="prc" class="form-control" id="prc">
                         </div>
-                    </div>
-                    </div><!-- Modal content-->
-                </div><!-- Modal -->
-                <!-- Modal -->
-    <!--acho q da p tirar isso<section id="links">
-        <div class="col-xs-2">
-            <div class="panel panel-default">
-            <div class="panel-heading"><h3>Produtos:</h3></div>
-            <div class="panel-body">
-                <ul>
-                    <li><a href="">Caminha de Cachorro</a></li>
-                    <li><a href="">Osso de Pano</a></li>
-                    <li><a href="">Osso </a></li>
-                    <li><a href="">Ração</a></li>
-                    <li><a href="">Todos</a></li>
-                </ul>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="btnSub" class="btn btn-default" data-dismiss="modal" onClick="btnConfirm()">Confirmar</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
             </div>
         </div>
+    </div>
+    <!-- Modal content-->
+    </div>
+    <!-- Modal -->
+    <!-- Modal -->
+    <div class="modal fade" id="edit" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                    <h4 class="modal-title">Editar Produto</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="editName">Nome do Produto:</label>
+                        <input type="editName" class="form-control" id="editName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1" onClick="nextEdit()">Próximo</button>
+                </div>
+            </div>
         </div>
-    </section>links-->
-
-        <div class="panel panel-default" id="panel2">
-        <div class="panel-heading"><h3>Histórico de Vendas:</h3></div>
+        <!-- Modal content-->
+    </div>
+    <!-- Modal -->
+    <!-- Modal -->
+    <div class="modal fade" id="del" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                    <h4 class="modal-title">Deletar Produto</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="pName">Nome do Produto:</label>
+                        <input type="productName" class="form-control" id="pName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onClick="btnDel()">Deletar</button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal content-->
+    </div>
+    <!-- Modal -->
+    <!--Modal de Edição-->
+    <div class="modal fade" id="myModal1" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                    <h4 class="modal-title">Editar Produto</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="frm2" action="/action_page.php">
+                        <div class="form-group">
+                            <label for="id">Id:</label>
+                            <input type="id" class="form-control" id="idE">
+                        </div>
+                        <div class="form-group">
+                            <label for="amnt">Quantidade:</label>
+                            <input type="amnt" class="form-control" id="amntE">
+                        </div>
+                        <div class="form-group">
+                            <label for="desc">Descrição:</label>
+                            <input type="desc" class="form-control" id="descE">
+                        </div>
+                        <div class="form-group">
+                            <label for="img">imagemURL:</label>
+                            <input type="img" class="form-control" id="imgE">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Nome:</label>
+                            <input type="name" class="form-control" id="nameE">
+                        </div>
+                        <div class="form-group">
+                            <label for="prc">Preço:</label>
+                            <input type="prc" class="form-control" id="prcE">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onClick="btnEd()">Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal content-->
+    </div>
+    <div class="panel panel-default" id="panel2">
+        <div class="panel-heading">
+            <h3>Histórico de Vendas:</h3>
+        </div>
         <div class="panel-body">
             <div class="col-xs-2">
                 oi
             </div>
             <div class="col-xs-5">
-            <div id="canvas-container">
-            <canvas id="myChart" width="200" height="200" class></canvas>
+                <div id="canvas-container">
+                    <canvas id="myChart" width="200" height="200" class></canvas>
+                </div>
+                <div id="canvas-container">
+                    <canvas id="myChart2" width="200" height="200" class></canvas>
+                </div>
             </div>
-            <div id="canvas-container">
-            <canvas id="myChart2" width="200" height="200" class></canvas>
+            <!--   div4-->
+            <div class="col-xs-5">
+                <h4>Lista de Produtos</h4>
+                <ul id="lista">
+                    <li></li>
+                </ul>
             </div>
-            </div><!--   div4-->
-           <div class="col-xs-5">
-            <h4>Lista de Produtos</h4>
-            <ul id="lista">
-               <li></li>
-               </ul>
-            </div>
-        </div><!--   panelB-->
-        </div> <!--  panelD-->
-        </div> <!--    Coluna-->
- 
+        </div>
+        <!--   panelB-->
+    </div>
+    <!--  panelD-->
+    </div>
+    <!--    Coluna-->
 
-<script src="js/bootstrap.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
-<script src="js/firebase-initialization.js"></script>
-<script src="js/grafico.js"></script>
-<script src="js/admFunc.js"></script>
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+    <script src="js/firebase-initialization.js"></script>
+    <script src="js/grafico.js"></script>
+    <script src="js/admFunc.js"></script>
 </body>
+
 </html>

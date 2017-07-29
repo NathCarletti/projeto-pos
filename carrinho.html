@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-  <title>Petshop - Meu carrinho</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/carrinho.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
+    <title>Petshop - Meu carrinho</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/carrinho.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
-<body>
 
+<body>
     <!-- Navigation bar -->
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -52,32 +52,28 @@
         </div>
         <div class="panel-body">
 
-    <!-- Table -->
-    <table class="table-responsive">
-        <thead>
-            <tr>
-                <th colspan="2" class="text-center">Produto</th>
-                <th class="text-center">Preço</th>
-                <th class="text-center">Quantidade</th>
-                <th class="text-center">Total</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody id="products" ></tbody>
+            <!-- Table -->
+            <table class="table-responsive">
+                <thead>
+                    <tr>
+                        <th colspan="2" class="text-center">Produto</th>
+                        <th class="text-center">Preço</th>
+                        <th class="text-center">Quantidade</th>
+                        <th class="text-center">Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="products"></tbody>
 
-    </table>
-
-    <div class="loader" id="loader"></div> 
-
-    </div>
+            </table>
+            <div class="loader" id="loader"></div>
+        </div>
         <div id="cartTotalPrice" class="panel-footer">Total</div>
     </div>
 
     <button id="btnSubmit" type="button" class="btn btn-success">Finalizar</button>
 
     <!-- The Modal -->
-    <!-- <div id="myModal" class="modal"> -->
-
     <div class="modal" id="myModal">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -91,14 +87,14 @@
                     <span id="modalText">Some text in the Modal..</span>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id = "modalBtnNo" class="btn btn-default" data-dismiss="modal" >Não</button>
-                    <button type="submit" id = "modalBtnYes" class="btn btn-default" data-dismiss="modal" >Sim</button>
+                    <button type="submit" id="modalBtnNo" class="btn btn-default" data-dismiss="modal">Não</button>
+                    <button type="submit" id="modalBtnYes" class="btn btn-default" data-dismiss="modal">Sim</button>
                 </div>
             </div>
         </div>
     </div>
 
-        <!-- Bootstrap core JavaScript
+    <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
 
@@ -109,4 +105,5 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/carrinho.js"></script>
 </body>
+
 </html>
