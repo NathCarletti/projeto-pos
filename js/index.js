@@ -1,86 +1,92 @@
 var database = firebase.database()
 
-function btnSub(){
-    var pass1= document.getElementById('pwd1').value
-    var pass2=document.getElementById('pwd2').value
+function btnSub() {
+    var pass1 = document.getElementById('pwd1').value
+    var pass2 = document.getElementById('pwd2').value
     var userName = document.getElementById('name').value
     var userAdd = document.getElementById('add').value
-    var userCard= document.getElementById('card').value
+    var userCard = document.getElementById('card').value
     var userTel = document.getElementById('tel').value
-    var userEmail=document.getElementById('email').value
+    var userEmail = document.getElementById('email').value
 
-   /* if(userName.trim()==='') alert ('Digite o nome!!');
-	else if(!isNaN(parseFloat(userName))) alert('Digite nome valido');
-	else if(userAdd.trim()==='') alert('Digite o endereço!!');
-	else if(userCard.trim()==='') alert('Digite o número cartão!!');
-	else if(userTel.trim()==='') alert('Digite o telefone!!');
-	else if(userEmail.trim()==='') alert('Digite o E-mail!!');
-    else if(!isNaN(parseFloat(userEmail))) alert('Digite e-mail valido');
-	else if(isNaN(parseFloat(userTel))) alert('Digite numero valido');
-	else {
-         if(pass1==pass2){
-			pass1 = pass1
-		    }else{
-			alert("error")
-		}
-       /*var usuario=[
-           userName,
-           userAdd,
-           userCard,
-           userEmail
-       ]*/
-       writeUserData(12, userName, userAdd, userCard, userTel, userEmail);
-      /*
-		userName.value='';
-		userAdd.value='';
-		userCard.value='';
-		userTel.value='';
-		userEmail.value='';
-		userName.focus();*/
-    }
+    /* if(userName.trim()==='') alert ('Digite o nome!!');
+     else if(!isNaN(parseFloat(userName))) alert('Digite nome valido');
+     else if(userAdd.trim()==='') alert('Digite o endereço!!');
+     else if(userCard.trim()==='') alert('Digite o número cartão!!');
+     else if(userTel.trim()==='') alert('Digite o telefone!!');
+     else if(userEmail.trim()==='') alert('Digite o E-mail!!');
+     else if(!isNaN(parseFloat(userEmail))) alert('Digite e-mail valido');
+     else if(isNaN(parseFloat(userTel))) alert('Digite numero valido');
+     else {
+          if(pass1==pass2){
+             pass1 = pass1
+             }else{
+             alert("error")
+         }
+        /*var usuario=[
+            userName,
+            userAdd,
+            userCard,
+            userEmail
+        ]*/
+    writeUserData(12, userName, userAdd, userCard, userTel, userEmail);
+    /*
+      userName.value='';
+      userAdd.value='';
+      userCard.value='';
+      userTel.value='';
+      userEmail.value='';
+      userName.focus();*/
+}
+
+var userEmailL = document.getElementById('emailL')
+var userPassL = document.getElementById('pwdL')
 
 function btnLogin() {
-    var userEmailL = document.getElementById('emailL').value
-    var userPassL = document.getElementById('pwdL').value
-    
-    loginUserData(userEmailL,userPassL)
+    var userEmailValue = userEmailL.value
+    var userPassValue = userPassL.value
+
+    loginUserData(userEmailValue, userPassValue)
 }
 
 function writeUserData(userId, userName, userAdd, userCard, userTel, userEmail) {
-  database.ref('users/' + userId).set({
-    username: userName,
-    address: userAdd,
-    card: userCard,
-    phone: userTel,
-    email: userEmail
-  });
-
-console.log('oi')
+    database.ref('users/' + userId).set({
+        username: userName,
+        address: userAdd,
+        card: userCard,
+        phone: userTel,
+        email: userEmail
+    });
 }
 
-function loginUserData(userEmailL, userPassL) {
+function loginUserData(userEmailValue, userPassValue) {
+    userPassL.parentNode.classList.remove("has-error")
+    userEmailL.parentNode.classList.remove("has-error")
+
     database.ref('users/')
 
         .orderByChild('email')
-        .startAt(userEmailL).endAt(userEmailL)
-        .once('value').then(function(snapshot) {
+        .startAt(userEmailValue).endAt(userEmailValue)
+        .once('value').then(function (snapshot) {
 
-        if(snapshot.val() != null) {
+            if (snapshot.val() != null) {
 
-            // Email exists on database.
-            // Check password
-            var storedPass = snapshot.val()[0].pass
+                // Email exists on database.
+                // Check password
+                var storedPass = snapshot.val()[0].pass
 
-            if(storedPass == userPassL) {
-                console.log("Login")
+                if (storedPass == userPassValue) {
+                    console.log("Login")
+                } else {
+                    console.log("Wrong password")
+                    userPassL.parentNode.classList.add("has-error")
+                }
+
             } else {
-                console.log("Wrong password")
+                console.log("This email is not registered yet.")
+                userEmailL.parentNode.classList.add("has-error")
             }
-
-        } else {
-            console.log("This email is not registered yet.")
-        }
-    });
+        });
 }
 
 var userId = 10 // TODO get real ID
@@ -92,32 +98,32 @@ function getAllUserCartItems(callback) {
 
     console.log("Getting products...")
 
-    
+
     var allProducts = new Array()
 
     database.ref('/products/')
-        .once('value').then(function(snapshot) {
+        .once('value').then(function (snapshot) {
 
-        var firebaseProducts = snapshot.val()
-        
-        for(var i in firebaseProducts) {
-            
-            var product = new Object()
-            product["id"] = i
-            product["name"] = firebaseProducts[i].name
-            product["price"] = firebaseProducts[i].price
-            product["imageUrl"] = firebaseProducts[i].imageUrl
+            var firebaseProducts = snapshot.val()
 
-            allProducts.push(product)
-        }
+            for (var i in firebaseProducts) {
 
-        callback(allProducts)
-    });
+                var product = new Object()
+                product["id"] = i
+                product["name"] = firebaseProducts[i].name
+                product["price"] = firebaseProducts[i].price
+                product["imageUrl"] = firebaseProducts[i].imageUrl
+
+                allProducts.push(product)
+            }
+
+            callback(allProducts)
+        });
 }
 
-getAllUserCartItems(function(allProducts) {
+getAllUserCartItems(function (allProducts) {
 
-    for(var i in allProducts) {
+    for (var i in allProducts) {
         console.log(allProducts[i])
         addProductHTML(allProducts[i])
     }
@@ -142,7 +148,7 @@ function addProductHTML(product) {
     html += '</div>';
     html += '</div>';
     //t += html;
-        
+
     productsDiv.innerHTML += html;
 }
 
@@ -150,7 +156,7 @@ function formatMoney(num) {
     return "R$ " + num.toFixed(2).toString().replace(".", ",");
 }
 
-if (typeof(Storage) !== "undefined") {
+if (typeof (Storage) !== "undefined") {
     // Code for localStorage/sessionStorage.
     console.log("Local Storage can be used")
 } else {
@@ -181,16 +187,16 @@ sampleUsingSessionStorage()*/
 updateCartItemsCountInNavigationBar()
 
 function addToCart(productId) {
-    
+
     var currentCartItems = localStorage.cart
     var allItems = new Array();
 
-    if(currentCartItems) {
+    if (currentCartItems) {
         // Check if the item is already added
         allItems = JSON.parse(currentCartItems);
-        
+
         var itemAlreadyAdded = allItems.find(e => e.id == productId) != null
-        if(!itemAlreadyAdded) {
+        if (!itemAlreadyAdded) {
             addItemLocalStorage(allItems, productId)
         } else {
             console.log("This item has already been added.")
@@ -211,7 +217,7 @@ function addItemLocalStorage(allItems, itemIdToAdd) {
 
     var obj = new Object();
     obj.id = itemIdToAdd;
-    obj.amount  = 1;
+    obj.amount = 1;
 
     allItems.push(obj)
 
@@ -235,7 +241,7 @@ function getCartItemsCount() {
     var currentCartItems = localStorage.cart
     var currentCartItemsCount = 0
 
-    if(currentCartItems) {
+    if (currentCartItems) {
 
         var allItems = new Array()
         allItems = JSON.parse(localStorage.cart)
@@ -254,7 +260,7 @@ updateNavBarMenu()
 function updateNavBarMenu() {
 
     // Handling user login
-    if(loggedUserId = getUserIdLogged()) {
+    if (loggedUserId = getUserIdLogged()) {
         console.log("The user with ID " + loggedUserId + "is logged")
         menuUserLoggedIn.parentNode.removeChild(menuUserLoggedIn);
     } else {
