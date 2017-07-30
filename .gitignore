@@ -60,5 +60,10 @@ typings/
 # dotenv environment variables file
 .env
 
+# Firebase public hosting folder and files
+public/
+firebase.json
+database.rules.json
+.firebaserc
 
 # End of https://www.gitignore.io/api/node
