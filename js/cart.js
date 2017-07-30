@@ -131,19 +131,21 @@ submit.addEventListener('click', function(event) {
             var result = confirm("Finalizar pedido de compra?")
 
             // Add all cart items to purschase
-            addPurchase()
+            addPurchase(function() {
+                // Clear cart items
 
-            // Clear cart items
 
+                if (result == true) {
+                    console.log("You pressed OK!")
 
-            if (result == true) {
-                console.log("You pressed OK!")
+                    window.location = "purchase-history.html";
 
-                window.location = "purchase-history.html";
+                } else {
+                    console.log("You pressed Cancel!")
+                }
+            })
 
-            } else {
-                console.log("You pressed Cancel!")
-            }
+            
 
         } else {
             alert("Seu carrinho está vazio!")
@@ -153,15 +155,26 @@ submit.addEventListener('click', function(event) {
     }
 })
 
-function addPurchase() {
+function addPurchase(callback) {
 
-    firebase.database().ref('purchase/').set({
-        date: getDate(),
-        items: getAllUserCartItems(),
-        status : "Aguardando confirmação de pagamento.",
-        totalPrice : getCartTotalPrice(),
-        userId : getUserIdLogged()
-    });
+    // Handling with arrays in Firebase database is ****
+
+    firebase.database().ref('purchase/').once('value').then(function(snapshot) {
+        var newId = snapshot.val().length
+
+        firebase.database().ref('purchase/' + newId).set({
+            date: getDate(),
+            items: getAllUserCartItems(),
+            status : "Aguardando confirmação de pagamento.",
+            totalPrice : getCartTotalPrice(),
+            userId : Number(getUserIdLogged())
+        });
+
+    }).then(function() {
+        callback()
+    }).catch(function(error) {
+        alert("Data could not be saved." + error);
+    })
 }
 
 function getDate() {
@@ -270,7 +283,7 @@ function inputChanged(id, element) {
     var allItems = getAllUserCartItems()
     var itemIndex = allItems.findIndex(item => item.id === id)
 
-    allItems[itemIndex].amount = newValue
+    allItems[itemIndex].amount = Number(newValue)
 
     updateLocalStorage(allItems)
 }

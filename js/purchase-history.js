@@ -64,24 +64,18 @@ function loginUserData(userEmailValue, userPassValue) {
 var menuDefault = document.getElementById('menuDefault')
 var menuUserLoggedIn = document.getElementById('menuUserLoggedIn')
 
-//updateNavBarMenu()
+updateNavBarMenu()
 function updateNavBarMenu() {
 
     // Handling user login
     if (loggedUserId = getUserIdLogged()) {
         console.log("The user with ID " + loggedUserId + "is logged")
-        // menuUserLoggedIn.parentNode.removeChild(menuUserLoggedIn);
-        //menuDefault.style.visibility = 'hidden';
-        //menuUserLoggedIn.style.visibility = 'visible';
 
         menuDefault.style.visibility = 'visible';
         menuUserLoggedIn.style.visibility = 'hidden';
 
     } else {
         console.log("There is no user logged")
-        // menuDefault.parentNode.removeChild(menuDefault);
-        //menuDefault.style.visibility = 'visible';
-        //menuUserLoggedIn.style.visibility = 'hidden';
 
         menuDefault.style.visibility = 'hidden';
         menuUserLoggedIn.style.visibility = 'visible';
@@ -110,6 +104,8 @@ function getPurchaseItems(userId) {
     console.log(userId)
 
     if(userId != null) {
+
+        userId = Number(userId)
 
         database.ref('purchase/')
                 .orderByChild('userId')
@@ -140,6 +136,19 @@ function getPurchaseItems(userId) {
 
                     } else {
                         console.log("There is no purchase items for this user.")
+
+                        var t = "";
+
+                        var tr = '<tr tag>';
+                        tr += '<td colspan="4" class="text-center" ><span>Você ainda não realizou nenhum pedido.<span></td>';
+                        tr += '</tr>';
+                        t += tr;
+                            
+                        table.innerHTML += t;
+
+                        if(loader.parentNode != null) {
+                            loader.parentNode.removeChild(loader);
+                        }
                     }
                 })
     } else {
