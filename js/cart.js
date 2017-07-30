@@ -1,9 +1,6 @@
 // DEFINING FIREBASE DATABASE VARIABLE 
 var database = firebase.database()
 
-// GETTING USER LOGGED ID
-var userId = 10 // TODO get real ID
-
 // GETTING HTML ELEMENTS
 const submit = document.getElementById("btnSubmit")
 const table = document.getElementById("products")
@@ -81,8 +78,15 @@ function populateTable(cartProducts) {
                 var userAmount = productInfo.userAmount
 
                 addRow(id, imageUrl, name, price, totalAmount, userAmount)
+
+                // Atualizar total do carrinho
+                updateCartTotalValue()
+
             });
         }
+
+        
+
     } else {
         console.log("Your cart is empty")
 
@@ -144,8 +148,6 @@ submit.addEventListener('click', function(event) {
                     console.log("You pressed Cancel!")
                 }
             })
-
-            
 
         } else {
             alert("Seu carrinho está vazio!")
@@ -229,7 +231,6 @@ function deleteItem(id, element) {
     let row = element.parentNode.parentNode.rowIndex - 1
     
     var clickedItem = getTableClickedItem(element)
-    console.log("Delete product: " + clickedItem.name)
 
     modalText.textContent="Remover \"" + clickedItem.name + "\" do carrinho?";
     modal.style.display = "block";
@@ -238,26 +239,37 @@ function deleteItem(id, element) {
         console.log("Remover item " + clickedItem.name + " row: " + row)
         
         removeRow(row)
+
         modal.style.display = "none";
 
         var allItems = getAllUserCartItems()
+        console.log("all items on cart: " + allItems)
         var index = allItems.findIndex(item => item.id === id)
+        console.log("index to remove: " + index)
 
-        allItems.splice(index)
+        allItems.splice(index, 1)
+
+        console.log("all items after remove: " + allItems)
 
         if(allItems.length <= 0) {
             localStorage.removeItem("cart");
+
+            console.log("Your cart is empty")
+
         } else {
             updateLocalStorage(allItems)
         }
-
-        populateTable(getAllUserCartItems())
+        
+        updateCartTotalValue()
     }
 }
 
 function updateLocalStorage(allItems) {
+    console.log("Updating local storage")
 
     var jsonString = JSON.stringify(allItems);
+
+    console.log("JSON string: " + jsonString)
 
     localStorage.cart = jsonString
 
@@ -278,7 +290,7 @@ function inputChanged(id, element) {
 
     table.rows[row].cells[4].innerHTML = newTotal
 
-    cartTotalPrice.innerHTML = "Total: " + formatMoney(getCartTotalPrice())
+    updateCartTotalValue()
 
     var allItems = getAllUserCartItems()
     var itemIndex = allItems.findIndex(item => item.id === id)
@@ -288,15 +300,32 @@ function inputChanged(id, element) {
     updateLocalStorage(allItems)
 }
 
+function updateCartTotalValue() {
+    cartTotalPrice.innerHTML = "Total: " + formatMoney(getCartTotalPrice())
+}
+
 function getCartTotalPrice() {
 
     var total = 0.0
 
     var totalRows = table.rows.length
+
+    console.log("total rows: " + totalRows)
     
-    for(var i=0; i<totalRows; i++) {
-        var totalRow = table.rows[i].cells[4].innerHTML
-        total += formatNumber(totalRow)
+    if(totalRows > 0) {
+        for(var i=0; i<totalRows; i++) {
+            var totalRow = table.rows[i].cells[4].innerHTML
+            total += formatNumber(totalRow)
+        }
+    } else {
+        var t = "";
+
+        var tr = '<tr tag>';
+        tr += '<td colspan="5" class="text-center" ><span>Seu carrinho está vazio.<span></td>';
+        tr += '</tr>';
+        t += tr;
+            
+        table.innerHTML += t;
     }
 
     return total
@@ -319,59 +348,6 @@ function getTableClickedItem(element) {
 
     return clickedItem;
 }
-
-
-//function firebaseDeleteProduct(id) {
-
-//    database.ref('/cart/')
-//            .orderByChild('userId')
-//            .startAt(userId).endAt(userId)
-//            .once('value').then(function(snapshot) {
-
-//            var products = snapshot.val()[0].products
-//            var key = snapshot.key
-
-//            console.log("key: "+ key) // .items.splice(1, 1);
-            
-            /*products.child*/
-//            var newProducts = new Array();
-//            for(var i in products) {
-//                if(products[i].id != id) {
-//                    newProducts.push(products[i].id)
-
-//                    console.log("Adicionando: " + products[i].id)
-
-//                } else {
-//                    console.log("Removendo: " + products[i].id)
-//                }
-//            }
-
-
-//            var userCart = {
-//                products: newProducts,
-//                userId: userId
-//            };
-
-//            console.log(userCart.products)
-
-            // Write the new post's data simultaneously in the posts list and the user's post list.
-//            var updates = {};
-//            updates['/cart/' + 0] = userCart;
-            //updates['/user-posts/' + uid + '/' + newPostKey] = postData;
-
-            //firebase.database().ref().update(updates);
-
-            
-
-            //if( snapshot.val() === null ) {
-                /* does not exist */
-            //} else {
-            //    snapshot.ref().update({"postID": postID});
-            //}
-//    });
-//}
-
-
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
@@ -460,18 +436,12 @@ function updateNavBarMenu() {
     // Handling user login
     if (loggedUserId = getUserIdLogged()) {
         console.log("The user with ID " + loggedUserId + "is logged")
-        // menuUserLoggedIn.parentNode.removeChild(menuUserLoggedIn);
-        //menuDefault.style.visibility = 'hidden';
-        //menuUserLoggedIn.style.visibility = 'visible';
 
         menuDefault.style.visibility = 'visible';
         menuUserLoggedIn.style.visibility = 'hidden';
 
     } else {
         console.log("There is no user logged")
-        // menuDefault.parentNode.removeChild(menuDefault);
-        //menuDefault.style.visibility = 'visible';
-        //menuUserLoggedIn.style.visibility = 'hidden';
 
         menuDefault.style.visibility = 'hidden';
         menuUserLoggedIn.style.visibility = 'visible';
