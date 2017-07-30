@@ -18,8 +18,6 @@ const cartTotalPrice = document.getElementById('cartTotalPrice');
 updateCartItemsCountInNavigationBar()
 populateTable(getAllUserCartItems())
 
-// localStorage.removeItem("cart");
-
 function updateCartItemsCountInNavigationBar() {
     var itemsCount = getCartItemsCount();
 
@@ -50,6 +48,11 @@ function getAllUserCartItems() {
 
         return allItems
     }
+}
+
+function clearCartItems() {
+
+    localStorage.removeItem("cart");
 }
 
 var userCartProducts = new Array();
@@ -122,7 +125,61 @@ function getProductInfo(productId, productAmount, callback) {
 
 submit.addEventListener('click', function(event) {
     console.log("Submit action")
+
+    if(getUserIdLogged()) {
+        if(getAllUserCartItems() != null) {
+            var result = confirm("Finalizar pedido de compra?")
+
+            // Add all cart items to purschase
+            addPurchase()
+
+            // Clear cart items
+
+
+            if (result == true) {
+                console.log("You pressed OK!")
+
+                window.location = "purchase-history.html";
+
+            } else {
+                console.log("You pressed Cancel!")
+            }
+
+        } else {
+            alert("Seu carrinho está vazio!")
+        }
+    } else {
+        alert("Logue ou cadastre-se para finalizar o seu pedido!")
+    }
 })
+
+function addPurchase() {
+
+    firebase.database().ref('purchase/').set({
+        date: getDate(),
+        items: getAllUserCartItems(),
+        status : "Aguardando confirmação de pagamento.",
+        totalPrice : getCartTotalPrice(),
+        userId : getUserIdLogged()
+    });
+}
+
+function getDate() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd = '0'+dd
+    } 
+
+    if(mm<10) {
+        mm = '0'+mm
+    } 
+
+    return (dd + '/' + mm + '/' + yyyy)
+}
 
 function addRow(id, image, name, price, totalAmount, userAmount) {
 
@@ -326,20 +383,99 @@ window.onclick = function(event) {
 var menuDefault = document.getElementById('menuDefault')
 var menuUserLoggedIn = document.getElementById('menuUserLoggedIn')
 
-updateNavBarMenu()
+var userEmailL = document.getElementById('emailL')
+var userPassL = document.getElementById('pwdL')
 
+function btnLogin() {
+    var userEmailValue = userEmailL.value
+    var userPassValue = userPassL.value
+
+    loginUserData(userEmailValue, userPassValue)
+}
+
+function loginUserData(userEmailValue, userPassValue) {
+    userPassL.parentNode.classList.remove("has-error")
+    userEmailL.parentNode.classList.remove("has-error")
+
+    database.ref('users/')
+
+        .orderByChild('email')
+        .startAt(userEmailValue).endAt(userEmailValue)
+        .once('value').then(function (snapshot) {
+
+            if (snapshot.val() != null) {
+                // Email exists on database.
+
+                // Check password
+                var storedPass = snapshot.val()[0].pass
+
+                if (storedPass == userPassValue) {
+                    console.log("Login")
+
+                    // Closing modal
+                    modalLogin.style.display = 'none';
+
+                    var doc = content.document;
+                    var body = doc.body;
+                    var div = doc.getElementsByClassName("modal-backdrop");
+
+                    // Removing dimmer
+                    body.className = '';
+                    body.removeChild(div[0]);
+
+                    var userId = snapshot.val()[0].id
+                    setUserIdLogged(userId)
+                    updateNavBarMenu()
+
+                    alert("Olá " + snapshot.val()[0].name + "!")
+
+                } else {
+                    console.log("Wrong password")
+                    userPassL.parentNode.classList.add("has-error")
+                }
+
+            } else {
+                console.log("This email is not registered yet.")
+                userEmailL.parentNode.classList.add("has-error")
+            }
+        });
+}
+
+updateNavBarMenu()
 function updateNavBarMenu() {
 
     // Handling user login
-    if(loggedUserId = getUserIdLogged()) {
+    if (loggedUserId = getUserIdLogged()) {
         console.log("The user with ID " + loggedUserId + "is logged")
-        menuUserLoggedIn.parentNode.removeChild(menuUserLoggedIn);
+        // menuUserLoggedIn.parentNode.removeChild(menuUserLoggedIn);
+        //menuDefault.style.visibility = 'hidden';
+        //menuUserLoggedIn.style.visibility = 'visible';
+
+        menuDefault.style.visibility = 'visible';
+        menuUserLoggedIn.style.visibility = 'hidden';
+
     } else {
         console.log("There is no user logged")
-        menuDefault.parentNode.removeChild(menuDefault);
+        // menuDefault.parentNode.removeChild(menuDefault);
+        //menuDefault.style.visibility = 'visible';
+        //menuUserLoggedIn.style.visibility = 'hidden';
+
+        menuDefault.style.visibility = 'hidden';
+        menuUserLoggedIn.style.visibility = 'visible';
     }
 }
 
 function getUserIdLogged() {
     return sessionStorage.loggedUserId
+}
+
+function setUserIdLogged(userId) {
+    sessionStorage.loggedUserId = userId
+}
+
+function logout() {
+    sessionStorage.removeItem("loggedUserId")
+    updateNavBarMenu()
+
+    console.log("You have successfully logout!")
 }

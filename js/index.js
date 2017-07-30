@@ -59,6 +59,27 @@ function writeUserData(userId, userName, userAdd, userCard, userTel, userEmail) 
     });
 }
 
+function btnEdUser(){
+      var name= document.getElementById('nameE').value
+      var add=document.getElementById('addE').value
+      var card = document.getElementById('cardE').value
+      var phone = document.getElementById('telE').value
+      var email= document.getElementById('emailE').value
+      var pwd = document.getElementById('pwdE').value
+      var emailToEd = document.getElementById('editEmail').value
+
+    console.log(emailToEd)
+    database.ref('users/'+ userId).orderByChild('name').equalTo(emailToEd).once('value', function (snapshot){
+      snapshot.ref.update({
+        userName: name,
+        address: add,
+        card: card,
+        phone: phone,
+        email: email,
+        password: pwd
+      })
+  })
+}
 
 const modalLogin = document.getElementById('modalLogin');
 function loginUserData(userEmailValue, userPassValue) {
@@ -72,24 +93,30 @@ function loginUserData(userEmailValue, userPassValue) {
         .once('value').then(function (snapshot) {
 
             if (snapshot.val() != null) {
-
                 // Email exists on database.
+
                 // Check password
                 var storedPass = snapshot.val()[0].pass
 
                 if (storedPass == userPassValue) {
                     console.log("Login")
-                    //modalLogin.style.display = "none";
+
+                    // Closing modal
                     modalLogin.style.display = 'none';
 
-                    var dimmer = document.getElementsByClassName('modal-backdrop');
-                    //dimmer.parentNode.removeChild(dimmer);
+                    var doc = content.document;
+                    var body = doc.body;
+                    var div = doc.getElementsByClassName("modal-backdrop");
 
-                    //document.body.removeChild(dimmer)
+                    // Removing dimmer
+                    body.className = '';
+                    body.removeChild(div[0]);
 
                     var userId = snapshot.val()[0].id
                     setUserIdLogged(userId)
                     updateNavBarMenu()
+
+                    alert("Olá " + snapshot.val()[0].name + "!")
 
                 } else {
                     console.log("Wrong password")
