@@ -157,7 +157,7 @@ submit.addEventListener('click', function(event) {
 
 function addPurchase(callback) {
 
-    // Handling with arrays in Firebase database is ****
+    // Handling arrays in Firebase database is ****
 
     firebase.database().ref('purchase/').once('value').then(function(snapshot) {
         var newId = snapshot.val().length

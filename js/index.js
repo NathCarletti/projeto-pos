@@ -1,42 +1,104 @@
 var database = firebase.database()
 
-function btnSub() {
-    var pass1 = document.getElementById('pwd1').value
-    var pass2 = document.getElementById('pwd2').value
-    var userName = document.getElementById('name').value
-    var userAdd = document.getElementById('add').value
-    var userCard = document.getElementById('card').value
-    var userTel = document.getElementById('tel').value
-    var userEmail = document.getElementById('email').value
+const userPass = document.getElementById('pwd1')
+const userPassConfirm = document.getElementById('pwd2')
+const userName = document.getElementById('name')
+const userAdd = document.getElementById('add')
+const userCard = document.getElementById('card')
+const userTel = document.getElementById('tel')
+const userEmail = document.getElementById('email')
 
-    /* if(userName.trim()==='') alert ('Digite o nome!!');
-     else if(!isNaN(parseFloat(userName))) alert('Digite nome valido');
-     else if(userAdd.trim()==='') alert('Digite o endereço!!');
-     else if(userCard.trim()==='') alert('Digite o número cartão!!');
-     else if(userTel.trim()==='') alert('Digite o telefone!!');
-     else if(userEmail.trim()==='') alert('Digite o E-mail!!');
-     else if(!isNaN(parseFloat(userEmail))) alert('Digite e-mail valido');
-     else if(isNaN(parseFloat(userTel))) alert('Digite numero valido');
-     else {
-          if(pass1==pass2){
-             pass1 = pass1
-             }else{
-             alert("error")
-         }
-        /*var usuario=[
-            userName,
-            userAdd,
-            userCard,
-            userEmail
-        ]*/
-    writeUserData(12, userName, userAdd, userCard, userTel, userEmail);
-    /*
-      userName.value='';
-      userAdd.value='';
-      userCard.value='';
-      userTel.value='';
-      userEmail.value='';
-      userName.focus();*/
+function btnSub() {
+    var userPassValue = document.getElementById('pwd1').value
+    var userPassConfirmValue = document.getElementById('pwd2').value
+    var userNameValue = document.getElementById('name').value
+    var userAddValue = document.getElementById('add').value
+    var userCardValue = document.getElementById('card').value
+    var userTelValue = document.getElementById('tel').value
+    var userEmailValue = document.getElementById('email').value
+
+    userPass.parentNode.classList.remove("has-error")
+    userPassConfirm.parentNode.classList.remove("has-error")
+    userName.parentNode.classList.remove("has-error")
+    userAdd.parentNode.classList.remove("has-error")
+    userCard.parentNode.classList.remove("has-error")
+    userTel.parentNode.classList.remove("has-error")
+    userEmail.parentNode.classList.remove("has-error")
+
+    if(validateFields(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue, userPassConfirmValue)) {
+        writeUserData(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue)
+    }
+}
+
+function validateFields(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue, userPassConfirmValue) {
+    
+    // Validating empty fields
+    var thereIsEmptyField = false
+    if(userNameValue.trim() === '') {
+        thereIsEmptyField = true
+        userName.parentNode.classList.add("has-error")
+    }
+
+    if(userAddValue.trim() === '') {
+        thereIsEmptyField = true
+        userAdd.parentNode.classList.add("has-error")
+    }
+
+    if(userCardValue.trim() === '') {
+        thereIsEmptyField = true
+        userCard.parentNode.classList.add("has-error")
+    }
+
+    if(userTelValue.trim() === '') {
+        thereIsEmptyField = true
+        userTel.parentNode.classList.add("has-error")
+    }
+
+    if(userEmailValue.trim() === '') {
+        thereIsEmptyField = true
+        userEmail.parentNode.classList.add("has-error")
+    }
+
+    if(userPassValue.trim() === '') {
+        thereIsEmptyField = true
+        userPass.parentNode.classList.add("has-error")
+    }
+
+    if(userPassConfirmValue.trim() === '') {
+        thereIsEmptyField = true
+        userPassConfirm.parentNode.classList.add("has-error")
+    }
+
+    if(thereIsEmptyField) {
+        alert("Há campos vazios que precisam ser preenchidos!")
+        return false
+    } else {
+
+        if(!isNaN(parseFloat(userNameValue))) {
+
+            userName.parentNode.classList.add("has-error")
+            alert('Nome digitado é inválido!')
+
+            return false
+
+        } else if(!isNaN(parseFloat(userEmailValue))) {
+
+            userEmail.parentNode.classList.add("has-error")
+            alert('E-mail digitado é inválido')
+
+            return false
+
+        } else if(userPassValue != userPassConfirmValue) {
+
+            userPass.parentNode.classList.add("has-error")
+            userPassConfirm.parentNode.classList.add("has-error")
+            alert("Senhas não conferem!")
+
+            return false
+        }
+    }
+
+    return true
 }
 
 var userEmailL = document.getElementById('emailL')
@@ -49,14 +111,48 @@ function btnLogin() {
     loginUserData(userEmailValue, userPassValue)
 }
 
-function writeUserData(userId, userName, userAdd, userCard, userTel, userEmail) {
-    database.ref('users/' + userId).set({
-        username: userName,
-        address: userAdd,
-        card: userCard,
-        phone: userTel,
-        email: userEmail
-    });
+function writeUserData(userName, userAdd, userCard, userTel, userEmail, userPass) {
+
+    var newId = 0
+    firebase.database().ref('users/').once('value').then(function(snapshot) {
+        newId = snapshot.val().length
+
+        database.ref('users/' + newId).set({
+            username: userName,
+            address: userAdd,
+            card: userCard,
+            phone: userTel,
+            email: userEmail,
+            pass: userPass
+        })
+    }).then(function() {
+        
+        console.log("Cadastro realizado com sucesso!")
+
+        // Closing modal
+        const modalRegister = document.getElementById('modalRegister');
+        modalRegister.style.display = 'none';
+
+        var doc = content.document;
+        var body = doc.body;
+        var div = doc.getElementsByClassName("modal-backdrop");
+
+        // Removing dimmer
+        body.className = '';
+        body.removeChild(div[0]);
+
+        // Logging
+        setUserIdLogged(newId)
+
+        // Update dropdown
+        updateNavBarMenu()
+        
+        // Feedback to user
+        alert("Olá " + userName + "!")
+
+    }).catch(function(error) {
+        alert("Data could not be saved.\n" + error);
+    })
 }
 
 function btnEdUser(){
@@ -83,6 +179,9 @@ function btnEdUser(){
 
 const modalLogin = document.getElementById('modalLogin');
 function loginUserData(userEmailValue, userPassValue) {
+
+    console.log("Logging with \"" + userEmailValue + "\"")
+
     userPassL.parentNode.classList.remove("has-error")
     userEmailL.parentNode.classList.remove("has-error")
 
