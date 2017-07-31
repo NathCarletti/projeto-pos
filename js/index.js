@@ -377,12 +377,12 @@ function validateEditFields(storedUserPwd) {
 
 // Adding HTML code
 function addProductHTML(product) {
-
+console.log(product.imageURL)
     var html = "";
 
     var html = '<div class="col-xs-2">';
     html += '<div class="thumbnail">';
-    html += '<img src="images/' + product.imageUrl + '" alt="..." style="width:100%" class="product-img">';
+    html += '<img src="images/' + product.imageURL + '" style="width:100%" class="product-img">';
     html += '<div class="caption">';
     html += '<p>' + product.name + '</p>';
     html += '<p>' + formatMoney(product.price) + '</p>';
@@ -487,7 +487,7 @@ function getAllUserCartItems(callback) {
                 product["id"] = i
                 product["name"] = firebaseProducts[i].name
                 product["price"] = firebaseProducts[i].price
-                product["imageUrl"] = firebaseProducts[i].imageUrl
+                product["imageURL"] = firebaseProducts[i].imageURL
 
                 allProducts.push(product)
             }
