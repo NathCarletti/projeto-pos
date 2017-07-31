@@ -31,12 +31,12 @@ function populateTable(cartProducts) {
                 var id = productInfo.id
                 var name = productInfo.name
                 var price = productInfo.price
-                var imageUrl = productInfo.imageUrl
+                var imageURL = productInfo.imageURL
                 var description = productInfo.description
                 var totalAmount = productInfo.totalAmount
                 var userAmount = productInfo.userAmount
 
-                addRow(id, imageUrl, name, price, totalAmount, userAmount)
+                addRow(id, imageURL, name, price, totalAmount, userAmount)
 
                 // Atualizar total do carrinho
                 updateCartTotalValue()
@@ -76,7 +76,7 @@ function getProductInfo(productId, productAmount, callback) {
                 cartProductInfo["id"] = productId
                 cartProductInfo["name"] = product.name
                 cartProductInfo["price"] = product.price
-                cartProductInfo["imageUrl"] = product.imageUrl
+                cartProductInfo["imageURL"] = product.imageURL
                 cartProductInfo["description"] = product.description
                 cartProductInfo["totalAmount"] = product.amount
                 cartProductInfo["userAmount"] = productAmount
