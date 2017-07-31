@@ -39,7 +39,7 @@
                         
                         <ul id="menuDefault" class="dropdown-menu">
                             <li><a href="purchase-history.html">Meus pedidos</a></li>
-                            <li><a href="#">Meus dados</a></li>
+                            <li><a data-toggle="modal" onclick="loadEdUser()"  href="#modalEdit">Editar meus dados</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#" onclick="logout()" >Sair</a></li>
                         </ul>
@@ -128,13 +128,65 @@
                     </div>
                     <!-- Modal content-->
                 </div>
+
+                <div class="modal fade" id="modalEdit" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Editar</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="frm3" action="/action_page.php">
+                                    <div class="form-group">
+                                        <label for="name">Nome:</label>
+                                        <input type="name" class="form-control" id="nameEdit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="add">Endereço:</label>
+                                        <input type="add" class="form-control" id="addEdit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="card">Número do cartão:</label>
+                                        <input type="card" class="form-control" id="cardEdit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tel">Telefone:</label>
+                                        <input type="tel" class="form-control" id="telEdit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Endereço de e-mail:</label>
+                                        <input type="email" class="form-control" id="emailEdit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd1">Senha atual:</label>
+                                        <input type="password" class="form-control" id="pwd1Edit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd1">Nova senha:</label>
+                                        <input type="password" class="form-control" id="pwd2Edit">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd2">Confirmar nova senha:</label>
+                                        <input type="password" class="form-control" id="pwd3Edit">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" id="btnSubEdit" class="btn btn-default" onClick="btnEdUser()">Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal content-->
+                </div>
                 <!-- Modal -->
             </div>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container-fluid -->
     </nav>
-    <section id="links">
+    <!-- <section id="links">
         <div class="col-xs-2">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -152,7 +204,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!--produtos-->
     <div class="col-xs-10">
         <div class="panel panel-default">

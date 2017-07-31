@@ -25,70 +25,70 @@ function btnSub() {
     userTel.parentNode.classList.remove("has-error")
     userEmail.parentNode.classList.remove("has-error")
 
-    if(validateFields(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue, userPassConfirmValue)) {
+    if (validateRegisterFields(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue, userPassConfirmValue)) {
         writeUserData(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue)
     }
 }
 
-function validateFields(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue, userPassConfirmValue) {
-    
+function validateRegisterFields(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue, userPassConfirmValue) {
+
     // Validating empty fields
     var thereIsEmptyField = false
-    if(userNameValue.trim() === '') {
+    if (userNameValue.trim() === '') {
         thereIsEmptyField = true
         userName.parentNode.classList.add("has-error")
     }
 
-    if(userAddValue.trim() === '') {
+    if (userAddValue.trim() === '') {
         thereIsEmptyField = true
         userAdd.parentNode.classList.add("has-error")
     }
 
-    if(userCardValue.trim() === '') {
+    if (userCardValue.trim() === '') {
         thereIsEmptyField = true
         userCard.parentNode.classList.add("has-error")
     }
 
-    if(userTelValue.trim() === '') {
+    if (userTelValue.trim() === '') {
         thereIsEmptyField = true
         userTel.parentNode.classList.add("has-error")
     }
 
-    if(userEmailValue.trim() === '') {
+    if (userEmailValue.trim() === '') {
         thereIsEmptyField = true
         userEmail.parentNode.classList.add("has-error")
     }
 
-    if(userPassValue.trim() === '') {
+    if (userPassValue.trim() === '') {
         thereIsEmptyField = true
         userPass.parentNode.classList.add("has-error")
     }
 
-    if(userPassConfirmValue.trim() === '') {
+    if (userPassConfirmValue.trim() === '') {
         thereIsEmptyField = true
         userPassConfirm.parentNode.classList.add("has-error")
     }
 
-    if(thereIsEmptyField) {
+    if (thereIsEmptyField) {
         alert("Há campos vazios que precisam ser preenchidos!")
         return false
     } else {
 
-        if(!isNaN(parseFloat(userNameValue))) {
+        if (!isNaN(parseFloat(userNameValue))) {
 
             userName.parentNode.classList.add("has-error")
             alert('Nome digitado é inválido!')
 
             return false
 
-        } else if(!isNaN(parseFloat(userEmailValue))) {
+        } else if (!isNaN(parseFloat(userEmailValue))) {
 
             userEmail.parentNode.classList.add("has-error")
             alert('E-mail digitado é inválido')
 
             return false
 
-        } else if(userPassValue != userPassConfirmValue) {
+        } else if (userPassValue != userPassConfirmValue) {
 
             userPass.parentNode.classList.add("has-error")
             userPassConfirm.parentNode.classList.add("has-error")
@@ -114,7 +114,7 @@ function btnLogin() {
 function writeUserData(userName, userAdd, userCard, userTel, userEmail, userPass) {
 
     var newId = 0
-    firebase.database().ref('users/').once('value').then(function(snapshot) {
+    firebase.database().ref('users/').once('value').then(function (snapshot) {
         newId = snapshot.val().length
 
         database.ref('users/' + newId).set({
@@ -125,8 +125,8 @@ function writeUserData(userName, userAdd, userCard, userTel, userEmail, userPass
             email: userEmail,
             pass: userPass
         })
-    }).then(function() {
-        
+    }).then(function () {
+
         console.log("Cadastro realizado com sucesso!")
 
         // Closing modal
@@ -146,35 +146,176 @@ function writeUserData(userName, userAdd, userCard, userTel, userEmail, userPass
 
         // Update dropdown
         updateNavBarMenu()
-        
+
         // Feedback to user
         alert("Olá " + userName + "!")
 
-    }).catch(function(error) {
+    }).catch(function (error) {
         alert("Data could not be saved.\n" + error);
     })
 }
 
-function btnEdUser(){
-      var name= document.getElementById('nameE').value
-      var add=document.getElementById('addE').value
-      var card = document.getElementById('cardE').value
-      var phone = document.getElementById('telE').value
-      var email= document.getElementById('emailE').value
-      var pwd = document.getElementById('pwdE').value
-      var emailToEd = document.getElementById('editEmail').value
+function loadEdUser() {
+    var name = document.getElementById('nameEdit')
+    var add = document.getElementById('addEdit')
+    var card = document.getElementById('cardEdit')
+    var phone = document.getElementById('telEdit')
+    var email = document.getElementById('emailEdit')
 
-    console.log(emailToEd)
-    database.ref('users/'+ userId).orderByChild('name').equalTo(emailToEd).once('value', function (snapshot){
-      snapshot.ref.update({
-        userName: name,
-        address: add,
-        card: card,
-        phone: phone,
-        email: email,
-        password: pwd
-      })
-  })
+    var userId = getUserIdLogged()
+
+    database.ref('users/' + userId)
+        .once('value', function (snapshot) {
+
+            var user = snapshot.val()
+            
+            name.value = user.username
+            add.value = user.address
+            card.value = user.card
+            phone.value = user.phone
+            email.value = user.email
+        })
+}
+
+function btnEdUser() {
+    var name = document.getElementById('nameEdit')
+    var add = document.getElementById('addEdit')
+    var card = document.getElementById('cardEdit')
+    var phone = document.getElementById('telEdit')
+    var email = document.getElementById('emailEdit')
+    var pwdCurrent = document.getElementById('pwd1Edit')
+    var pwdNew = document.getElementById('pwd2Edit')
+    var pwdConfirmNew = document.getElementById('pwd3Edit')
+
+    name.parentNode.classList.remove("has-error")
+    add.parentNode.classList.remove("has-error")
+    card.parentNode.classList.remove("has-error")
+    phone.parentNode.classList.remove("has-error")
+    email.parentNode.classList.remove("has-error")
+    pwdCurrent.parentNode.classList.remove("has-error")
+    pwdNew.parentNode.classList.remove("has-error")
+    pwdConfirmNew.parentNode.classList.remove("has-error")
+
+    var userId = getUserIdLogged()
+
+    database.ref('users/' + userId)
+        .once('value', function (snapshot) {
+
+            var user = snapshot.val()
+
+            var pass
+
+            if(pwdNew.value != '') {
+                pass = pwdNew
+            } else {
+                pass = pwdCurrent
+            }
+
+            if(validateEditFields(user.pass)) {
+                snapshot.ref.update({
+                    userame: name.value,
+                    address: add.value,
+                    card: card.value,
+                    phone: phone.value,
+                    email: email.value,
+                    pass: pass
+                })
+            }
+        })
+        
+}
+
+function validateEditFields(storedUserPwd) {
+
+    console.log(storedUserPwd)
+
+    var userName = document.getElementById('nameEdit')
+    var userAdd = document.getElementById('addEdit')
+    var userCard = document.getElementById('cardEdit')
+    var userPhone = document.getElementById('telEdit')
+    var userEmail = document.getElementById('emailEdit')
+    var userPwdCurrent = document.getElementById('pwd1Edit')
+    var userPwdNew = document.getElementById('pwd2Edit')
+    var userPwdNewConfirm = document.getElementById('pwd3Edit')
+
+    var userNameValue = userName.value
+    var userAddValue = userAdd.value
+    var userCardValue = userCard.value
+    var userPhoneValue = userPhone.value
+    var userEmailValue = userEmail.value
+    var userPwdCurrentValue = userPwdCurrent.value
+    var userPwdNewValue = userPwdNew.value
+    var userPwdNewConfirmValue = userPwdNewConfirm.value
+
+    // Validating empty fields
+    var thereIsEmptyField = false
+    if (userNameValue.trim() === '') {
+        thereIsEmptyField = true
+        userName.parentNode.classList.add("has-error")
+    }
+
+    if (userAddValue.trim() === '') {
+        thereIsEmptyField = true
+        userAdd.parentNode.classList.add("has-error")
+    }
+
+    if (userCardValue.trim() === '') {
+        thereIsEmptyField = true
+        userCard.parentNode.classList.add("has-error")
+    }
+
+    if (userPhoneValue.trim() === '') {
+        thereIsEmptyField = true
+        userPhone.parentNode.classList.add("has-error")
+    }
+
+    if (userEmailValue.trim() === '') {
+        thereIsEmptyField = true
+        userEmail.parentNode.classList.add("has-error")
+    }
+
+    if (userPwdCurrentValue.trim() === '') {
+        thereIsEmptyField = true
+        userPwdCurrent.parentNode.classList.add("has-error")
+    }
+
+    if (thereIsEmptyField) {
+        alert("Há campos vazios que precisam ser preenchidos!")
+        return false
+    } else {
+
+        if (!isNaN(parseFloat(userNameValue))) {
+
+            userName.parentNode.classList.add("has-error")
+            alert('Nome digitado é inválido!')
+
+            return false
+
+        } else if (!isNaN(parseFloat(userEmailValue))) {
+
+            userEmail.parentNode.classList.add("has-error")
+            alert('E-mail digitado é inválido')
+
+            return false
+
+        } else if (userPwdCurrentValue != storedUserPwd) {
+
+            userPwdCurrent.parentNode.classList.add("has-error")
+            alert("Senha atual inválida")
+
+            return false
+        } else if ((userPwdNewValue != '' || userPwdNewConfirm != '')
+                && (userPwdNewValue != userPwdNewConfirmValue)) {
+
+            userPwdNew.parentNode.classList.add("has-error")
+            userPwdNewConfirm.parentNode.classList.add("has-error")
+            alert("Senhas não conferem!")
+
+            return false
+        }
+    }
+
+    return true
 }
 
 const modalLogin = document.getElementById('modalLogin');
@@ -195,7 +336,13 @@ function loginUserData(userEmailValue, userPassValue) {
                 // Email exists on database.
 
                 // Check password
-                var storedPass = snapshot.val()[0].pass
+                var user
+                var userId
+                for(var i in snapshot.val()) {
+                    user = snapshot.val()[i]
+                    userId = i
+                }
+                var storedPass = user.pass
 
                 if (storedPass == userPassValue) {
                     console.log("Login")
@@ -211,11 +358,10 @@ function loginUserData(userEmailValue, userPassValue) {
                     body.className = '';
                     body.removeChild(div[0]);
 
-                    var userId = snapshot.val()[0].id
                     setUserIdLogged(userId)
                     updateNavBarMenu()
 
-                    alert("Olá " + snapshot.val()[0].name + "!")
+                    alert("Olá " + user.username + "!")
 
                 } else {
                     console.log("Wrong password")
@@ -399,9 +545,6 @@ function updateNavBarMenu() {
     // Handling user login
     if (loggedUserId = getUserIdLogged()) {
         console.log("The user with ID " + loggedUserId + "is logged")
-        // menuUserLoggedIn.parentNode.removeChild(menuUserLoggedIn);
-        //menuDefault.style.visibility = 'hidden';
-        //menuUserLoggedIn.style.visibility = 'visible';
 
         menuDefault.style.visibility = 'visible';
         menuUserLoggedIn.style.visibility = 'hidden';
@@ -418,11 +561,20 @@ function updateNavBarMenu() {
 }
 
 function getUserIdLogged() {
-    return sessionStorage.loggedUserId
+
+    var userID = sessionStorage.loggedUserId
+
+    if(userID) {
+        return userID
+    } else {
+        return null
+    }
 }
 
 function setUserIdLogged(userId) {
-    sessionStorage.loggedUserId = userId
+    if(userId != null) {
+        sessionStorage.loggedUserId = userId
+    }
 }
 
 function logout() {
