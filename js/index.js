@@ -1,21 +1,18 @@
 var database = firebase.database()
 
-const userPass = document.getElementById('pwd1')
-const userPassConfirm = document.getElementById('pwd2')
-const userName = document.getElementById('name')
-const userAdd = document.getElementById('add')
-const userCard = document.getElementById('card')
-const userTel = document.getElementById('tel')
-const userEmail = document.getElementById('email')
+const productsDiv = document.getElementById("products")
+const loader = document.getElementById("loader")
 
+// Handling user registration
 function btnSub() {
-    var userPassValue = document.getElementById('pwd1').value
-    var userPassConfirmValue = document.getElementById('pwd2').value
-    var userNameValue = document.getElementById('name').value
-    var userAddValue = document.getElementById('add').value
-    var userCardValue = document.getElementById('card').value
-    var userTelValue = document.getElementById('tel').value
-    var userEmailValue = document.getElementById('email').value
+
+    const userPass = document.getElementById('pwd1')
+    const userPassConfirm = document.getElementById('pwd2')
+    const userName = document.getElementById('name')
+    const userAdd = document.getElementById('add')
+    const userCard = document.getElementById('card')
+    const userTel = document.getElementById('tel')
+    const userEmail = document.getElementById('email')
 
     userPass.parentNode.classList.remove("has-error")
     userPassConfirm.parentNode.classList.remove("has-error")
@@ -25,8 +22,8 @@ function btnSub() {
     userTel.parentNode.classList.remove("has-error")
     userEmail.parentNode.classList.remove("has-error")
 
-    if (validateRegisterFields(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue, userPassConfirmValue)) {
-        writeUserData(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue)
+    if (validateRegisterFields(userName.value, userAdd.value, userCard.value, userTel.value, userEmail.value, userPass.value, userPassConfirm.value)) {
+        writeUserData(userName.value, userAdd.value, userCard.value, userTel.value, userEmail.value, userPass.value)
     }
 }
 
@@ -101,16 +98,6 @@ function validateRegisterFields(userNameValue, userAddValue, userCardValue, user
     return true
 }
 
-var userEmailL = document.getElementById('emailL')
-var userPassL = document.getElementById('pwdL')
-
-function btnLogin() {
-    var userEmailValue = userEmailL.value
-    var userPassValue = userPassL.value
-
-    loginUserData(userEmailValue, userPassValue)
-}
-
 function writeUserData(userName, userAdd, userCard, userTel, userEmail, userPass) {
 
     var newId = 0
@@ -155,6 +142,76 @@ function writeUserData(userName, userAdd, userCard, userTel, userEmail, userPass
     })
 }
 
+// Handling user login
+var userEmailL = document.getElementById('emailL')
+var userPassL = document.getElementById('pwdL')
+
+function btnLogin() {
+    var userEmailValue = userEmailL.value
+    var userPassValue = userPassL.value
+
+    loginUserData(userEmailValue, userPassValue)
+}
+
+function loginUserData(userEmailValue, userPassValue) {
+
+    let modalLogin = document.getElementById('modalLogin');
+
+    console.log("Logging with \"" + userEmailValue + "\"")
+
+    userPassL.parentNode.classList.remove("has-error")
+    userEmailL.parentNode.classList.remove("has-error")
+
+    database.ref('users/')
+
+        .orderByChild('email')
+        .startAt(userEmailValue).endAt(userEmailValue)
+        .once('value').then(function (snapshot) {
+
+            if (snapshot.val() != null) {
+                // Email exists on database.
+
+                // Check password
+                var user
+                var userId
+                for(var i in snapshot.val()) {
+                    user = snapshot.val()[i]
+                    userId = i
+                }
+                var storedPass = user.pass
+
+                if (storedPass == userPassValue) {
+                    console.log("Login")
+
+                    // Closing modal
+                    modalLogin.style.display = 'none';
+
+                    var doc = content.document;
+                    var body = doc.body;
+                    var div = doc.getElementsByClassName("modal-backdrop");
+
+                    // Removing dimmer
+                    body.className = '';
+                    body.removeChild(div[0]);
+
+                    setUserIdLogged(userId)
+                    updateNavBarMenu()
+
+                    alert("Olá " + user.username + "!")
+
+                } else {
+                    console.log("Wrong password")
+                    userPassL.parentNode.classList.add("has-error")
+                }
+
+            } else {
+                console.log("This email is not registered yet.")
+                userEmailL.parentNode.classList.add("has-error")
+            }
+        });
+}
+
+// Handling user edit
 function loadEdUser() {
     var name = document.getElementById('nameEdit')
     var add = document.getElementById('addEdit')
@@ -318,65 +375,100 @@ function validateEditFields(storedUserPwd) {
     return true
 }
 
-const modalLogin = document.getElementById('modalLogin');
-function loginUserData(userEmailValue, userPassValue) {
+// Adding HTML code
+function addProductHTML(product) {
 
-    console.log("Logging with \"" + userEmailValue + "\"")
+    var html = "";
 
-    userPassL.parentNode.classList.remove("has-error")
-    userEmailL.parentNode.classList.remove("has-error")
+    var html = '<div class="col-xs-2">';
+    html += '<div class="thumbnail">';
+    html += '<img src="images/' + product.imageUrl + '" alt="..." style="width:100%" class="product-img">';
+    html += '<div class="caption">';
+    html += '<p>' + product.name + '</p>';
+    html += '<p>' + formatMoney(product.price) + '</p>';
+    html += '<button type="submit" class="btn btn-xs btn-success" onclick="addToCart(' + product.id + ')" >Adicionar ao carrinho</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
 
-    database.ref('users/')
-
-        .orderByChild('email')
-        .startAt(userEmailValue).endAt(userEmailValue)
-        .once('value').then(function (snapshot) {
-
-            if (snapshot.val() != null) {
-                // Email exists on database.
-
-                // Check password
-                var user
-                var userId
-                for(var i in snapshot.val()) {
-                    user = snapshot.val()[i]
-                    userId = i
-                }
-                var storedPass = user.pass
-
-                if (storedPass == userPassValue) {
-                    console.log("Login")
-
-                    // Closing modal
-                    modalLogin.style.display = 'none';
-
-                    var doc = content.document;
-                    var body = doc.body;
-                    var div = doc.getElementsByClassName("modal-backdrop");
-
-                    // Removing dimmer
-                    body.className = '';
-                    body.removeChild(div[0]);
-
-                    setUserIdLogged(userId)
-                    updateNavBarMenu()
-
-                    alert("Olá " + user.username + "!")
-
-                } else {
-                    console.log("Wrong password")
-                    userPassL.parentNode.classList.add("has-error")
-                }
-
-            } else {
-                console.log("This email is not registered yet.")
-                userEmailL.parentNode.classList.add("has-error")
-            }
-        });
+    productsDiv.innerHTML += html;
 }
 
-const productsDiv = document.getElementById("products")
-const loader = document.getElementById("loader")
+// Handling cart in local storage
+updateCartItemsCountInNavigationBar()
+
+getAllUserCartItems(function (allProducts) {
+
+    for (var i in allProducts) {
+        console.log(allProducts[i])
+        addProductHTML(allProducts[i])
+    }
+
+    console.log('Removing loader')
+    loader.parentNode.removeChild(loader);
+})
+
+function addToCart(productId) {
+
+    var currentCartItems = localStorage.cart
+    var allItems = new Array();
+
+    if (currentCartItems) {
+        // Check if the item is already added
+        allItems = JSON.parse(currentCartItems);
+
+        var itemAlreadyAdded = allItems.find(e => e.id == productId) != null
+        if (!itemAlreadyAdded) {
+            addCartItem(allItems, productId)
+        } else {
+            console.log("This item has already been added.")
+        }
+
+    } else {
+        // Store first item on cart
+        addCartItem(allItems, productId)
+    }
+
+    console.log("Cart: " + localStorage.cart)
+}
+
+function addCartItem(allItems, itemIdToAdd) {
+
+    let obj = new Object();
+    obj.id = itemIdToAdd;
+    obj.amount = 1;
+
+    allItems.push(obj)
+
+    let jsonString = JSON.stringify(allItems);
+
+    localStorage.cart = jsonString
+
+    updateCartItemsCountInNavigationBar()
+}
+
+function updateCartItemsCountInNavigationBar() {
+    let itemsCount = getCartItemsCount();
+
+    let badgeCart = document.getElementById('badgeCart')
+    badgeCart.innerHTML = itemsCount
+}
+
+function getCartItemsCount() {
+
+    var currentCartItems = localStorage.cart
+    var currentCartItemsCount = 0
+
+    if (currentCartItems) {
+
+        var allItems = new Array()
+        allItems = JSON.parse(localStorage.cart)
+
+        currentCartItemsCount = allItems.length
+    }
+
+    return currentCartItemsCount
+}
 
 function getAllUserCartItems(callback) {
 
@@ -404,145 +496,14 @@ function getAllUserCartItems(callback) {
         });
 }
 
-getAllUserCartItems(function (allProducts) {
-
-    for (var i in allProducts) {
-        console.log(allProducts[i])
-        addProductHTML(allProducts[i])
-    }
-
-    console.log('Removing loader')
-    loader.parentNode.removeChild(loader);
-})
-
-
-function addProductHTML(product) {
-
-    var html = "";
-
-    var html = '<div class="col-xs-2">';
-    html += '<div class="thumbnail">';
-    html += '<img src="images/' + product.imageUrl + '" alt="..." style="width:100%" class="product-img">';
-    html += '<div class="caption">';
-    html += '<p>' + product.name + '</p>';
-    html += '<p>' + formatMoney(product.price) + '</p>';
-    html += '<button type="submit" class="btn btn-xs btn-success" onclick="addToCart(' + product.id + ')" >Adicionar ao carrinho</button>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';
-    //t += html;
-
-    productsDiv.innerHTML += html;
-}
-
-function formatMoney(num) {
-    return "R$ " + num.toFixed(2).toString().replace(".", ",");
-}
-
-if (typeof (Storage) !== "undefined") {
-    // Code for localStorage/sessionStorage.
-    console.log("Local Storage can be used")
-} else {
-    // Sorry! No Web Storage support..
-    console.log("Local Storage cannot be used")
-}
-
-function sampleUsingLocalStorage() {
-    // Store
-    localStorage.setItem("lastname", "Smith");
-    // Retrieve
-    console.log(localStorage.getItem("lastname"))
-    // Remove
-    localStorage.removeItem("lastname");
-}
-
-/*function sampleUsingSessionStorage() {
-    if (sessionStorage.myName) {
-        sessionStorage.myName = Number(sessionStorage.myName) + 1;
-    } else {
-        sessionStorage.myName = 1;
-    }
-    console.log("You have clicked the button " + sessionStorage.myName + " time(s) in this session.")
-}
-sampleUsingSessionStorage()*/
-
-// localStorage.removeItem("cart");
-updateCartItemsCountInNavigationBar()
-
-function addToCart(productId) {
-
-    var currentCartItems = localStorage.cart
-    var allItems = new Array();
-
-    if (currentCartItems) {
-        // Check if the item is already added
-        allItems = JSON.parse(currentCartItems);
-
-        var itemAlreadyAdded = allItems.find(e => e.id == productId) != null
-        if (!itemAlreadyAdded) {
-            addItemLocalStorage(allItems, productId)
-        } else {
-            console.log("This item has already been added.")
-        }
-
-    } else {
-        // Store first item on cart
-        addItemLocalStorage(allItems, productId)
-    }
-
-    console.log("Cart: " + localStorage.cart)
-
-    // to remove
-    // localStorage.removeItem("cart");
-}
-
-function addItemLocalStorage(allItems, itemIdToAdd) {
-
-    var obj = new Object();
-    obj.id = itemIdToAdd;
-    obj.amount = 1;
-
-    allItems.push(obj)
-
-    var jsonString = JSON.stringify(allItems);
-
-    localStorage.cart = jsonString
-
-    updateCartItemsCountInNavigationBar()
-}
-
-function updateCartItemsCountInNavigationBar() {
-    var itemsCount = getCartItemsCount();
-
-    var badgeCart = document.getElementById('badgeCart')
-    badgeCart.innerHTML = itemsCount
-
-}
-
-function getCartItemsCount() {
-
-    var currentCartItems = localStorage.cart
-    var currentCartItemsCount = 0
-
-    if (currentCartItems) {
-
-        var allItems = new Array()
-        allItems = JSON.parse(localStorage.cart)
-
-        currentCartItemsCount = allItems.length
-    }
-
-    return currentCartItemsCount
-}
-
-var menuDefault = document.getElementById('menuDefault')
-var menuUserLoggedIn = document.getElementById('menuUserLoggedIn')
-
+// Updating dropdown nav bar menu
 updateNavBarMenu()
 
 function updateNavBarMenu() {
 
-    // Handling user login
+    let menuDefault = document.getElementById('menuDefault')
+    let menuUserLoggedIn = document.getElementById('menuUserLoggedIn')
+
     if (loggedUserId = getUserIdLogged()) {
         console.log("The user with ID " + loggedUserId + "is logged")
 
@@ -551,18 +512,16 @@ function updateNavBarMenu() {
 
     } else {
         console.log("There is no user logged")
-        // menuDefault.parentNode.removeChild(menuDefault);
-        //menuDefault.style.visibility = 'visible';
-        //menuUserLoggedIn.style.visibility = 'hidden';
 
         menuDefault.style.visibility = 'hidden';
         menuUserLoggedIn.style.visibility = 'visible';
     }
 }
 
+// Handling user login
 function getUserIdLogged() {
 
-    var userID = sessionStorage.loggedUserId
+    let userID = sessionStorage.loggedUserId
 
     if(userID) {
         return userID
@@ -582,4 +541,17 @@ function logout() {
     updateNavBarMenu()
 
     console.log("You have successfully logout!")
+}
+
+// Checking if browser can use local storage
+
+if (typeof (Storage) !== "undefined") {
+    console.log("Local Storage can be used")
+} else {
+    console.log("Local Storage cannot be used.")
+}
+
+// Utils
+function formatMoney(num) {
+    return "R$ " + num.toFixed(2).toString().replace(".", ",");
 }

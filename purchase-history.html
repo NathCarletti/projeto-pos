@@ -11,44 +11,33 @@
 </head>
 
 <body>
-    <!-- Navigation bar -->
     <nav class="navbar navbar-default">
         <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
-                    aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">Petshop</a>
+                <a href="index.html" class="navbar-brand">Petshop</a>
             </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="cart.html">Carrinho <span id="badgeCart" class="badge">0</span></a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Minha conta <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Minha conta<span class="caret"></span></a>
+                        
                         <ul id="menuUserLoggedIn" class="dropdown-menu">
                             <li><a data-toggle="modal" href="#modalLogin">Entrar</a></li>
                             <li><a data-toggle="modal" href="#modalRegister">Cadastrar</a></li>
                         </ul>
-                        
+
                         <ul id="menuDefault" class="dropdown-menu">
-                            <li><a data-toggle="modal" href="#">Meus pedidos</a></li>
-                            <li><a href="#">Meus dados</a></li>
+                            <li><a href="" >Meus pedidos</a></li>
+                            <li><a data-toggle="modal" onclick="loadEdUser()" href="#modalEdit">Editar meus dados</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="index.html">Sair</a></li>
+                            <li><a href="" onclick="logout()">Sair</a></li>
                         </ul>
                     </li>
                 </ul>
             </div>
-            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container-fluid -->
     </nav>
 
     <div class="panel panel-default">
@@ -58,7 +47,7 @@
         <div class="panel-body">
 
             <!-- Table -->
-            <table class="table-responsive"fi>
+            <table class="table-responsive" >
                 <thead>
                     <tr>
                         <th class="text-center">Data do pedido</th>
@@ -75,7 +64,6 @@
         </div>
     </div>
 
-    <!-- Modal -->
     <div class="modal fade" id="modalLogin" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -87,81 +75,117 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label for="email">Endereço de e-mail:</label>
+                            <label for="emailL">Endereço de e-mail:</label>
                             <input type="email" class="form-control" id="emailL">
                         </div>
                         <div class="form-group">
-                            <label for="pwd">Senha:</label>
+                            <label for="pwdL">Senha:</label>
                             <input type="password" class="form-control" id="pwdL">
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox">Lembrar</label>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="login" class="btn btn-default" onClick="btnLogin()">Login</button>
+                    <button type="submit" class="btn btn-default" onClick="btnLogin()">Entrar</button>
                 </div>
             </div>
         </div>
-        <!-- Modal content-->
     </div>
-    <!-- Modal -->
-    <!-- Modal -->
+
     <div class="modal fade" id="modalRegister" role="dialog">
         <div class="modal-dialog">
-            <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Cadastrar</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="frm2" action="/action_page.php">
+                    <form>
                         <div class="form-group">
                             <label for="name">Nome:</label>
-                            <input type="name" class="form-control" id="name">
+                            <input type="text" class="form-control" id="name">
                         </div>
                         <div class="form-group">
                             <label for="add">Endereço:</label>
-                            <input type="add" class="form-control" id="add">
+                            <input type="text" class="form-control" id="add">
                         </div>
                         <div class="form-group">
                             <label for="card">Número do cartão:</label>
-                            <input type="card" class="form-control" id="card">
+                            <input type="text" class="form-control" id="card">
                         </div>
                         <div class="form-group">
                             <label for="tel">Telefone:</label>
-                            <input type="tel" class="form-control" id="tel">
+                            <input type="text" class="form-control" id="tel">
                         </div>
                         <div class="form-group">
                             <label for="email">Endereço de e-mail:</label>
-                            <input type="email" class="form-control" id="email">
+                            <input type="text" class="form-control" id="email">
                         </div>
                         <div class="form-group">
                             <label for="pwd1">Senha:</label>
-                            <input type="password1" class="form-control" id="pwd1">
+                            <input type="password" class="form-control" id="pwd1">
                         </div>
                         <div class="form-group">
                             <label for="pwd2">Confirmar senha:</label>
-                            <input type="password2" class="form-control" id="pwd2">
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox">Lembrar</label>
+                            <input type="password" class="form-control" id="pwd2">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="btnSub" class="btn btn-default" data-dismiss="modal" onClick="btnSub()">Submit</button>
+                    <button type="submit" id="btnSub" class="btn btn-default" onClick="btnSub()">Enviar</button>
                 </div>
             </div>
         </div>
-        <!-- Modal content-->
     </div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+    <div class="modal fade" id="modalEdit" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Editar</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="nameEdit">Nome:</label>
+                            <input type="text" class="form-control" id="nameEdit">
+                        </div>
+                        <div class="form-group">
+                            <label for="addEdit">Endereço:</label>
+                            <input type="text" class="form-control" id="addEdit">
+                        </div>
+                        <div class="form-group">
+                            <label for="cardEdit">Número do cartão:</label>
+                            <input type="text" class="form-control" id="cardEdit">
+                        </div>
+                        <div class="form-group">
+                            <label for="telEdit">Telefone:</label>
+                            <input type="tel" class="form-control" id="telEdit">
+                        </div>
+                        <div class="form-group">
+                            <label for="emailEdit">Endereço de e-mail:</label>
+                            <input type="email" class="form-control" id="emailEdit">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd1Edit">Senha atual:</label>
+                            <input type="password" class="form-control" id="pwd1Edit">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd2Edit">Nova senha:</label>
+                            <input type="password" class="form-control" id="pwd2Edit">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd3Edit">Confirmar nova senha:</label>
+                            <input type="password" class="form-control" id="pwd3Edit">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="btnSubEdit" class="btn btn-default" onClick="btnEdUser()">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-app.js"></script>

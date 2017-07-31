@@ -5,52 +5,13 @@ var database = firebase.database()
 const submit = document.getElementById("btnSubmit")
 const table = document.getElementById("products")
 const loader = document.getElementById("loader")
-const modal = document.getElementById('myModal');
+const modal = document.getElementById('modalDelete');
 const modalText = document.getElementById('modalText');
 const modalBtnYes = document.getElementById('modalBtnYes');
 const modalBtnNo = document.getElementById('modalBtnNo');
 const cartTotalPrice = document.getElementById('cartTotalPrice');
 
-// THINGS TO DO AS SOON AS THE PAGE LOADS
-updateCartItemsCountInNavigationBar()
 populateTable(getAllUserCartItems())
-
-function updateCartItemsCountInNavigationBar() {
-    var itemsCount = getCartItemsCount();
-
-    var badgeCart = document.getElementById('badgeCart')
-    badgeCart.innerHTML = itemsCount
-}
-
-function getCartItemsCount() {
-
-    var currentCartItems = getAllUserCartItems()
-    var currentCartItemsCount = 0
-
-    if(currentCartItems != null) {
-        currentCartItemsCount = currentCartItems.length
-    }
-
-    return currentCartItemsCount
-}
-
-function getAllUserCartItems() {
-
-    var currentCartItems = localStorage.cart
-
-    if(currentCartItems) {
-
-        var allItems = new Array()
-        allItems = JSON.parse(localStorage.cart)
-
-        return allItems
-    }
-}
-
-function clearCartItems() {
-
-    localStorage.removeItem("cart");
-}
 
 var userCartProducts = new Array();
 function populateTable(cartProducts) {
@@ -58,8 +19,6 @@ function populateTable(cartProducts) {
     if(cartProducts != null) {
 
         console.log("Getting products...")
-
-        // var userCartProducts = new Array();
 
         for(var key in cartProducts) {
 
@@ -137,7 +96,7 @@ submit.addEventListener('click', function(event) {
             // Add all cart items to purschase
             addPurchase(function() {
                 // Clear cart items
-
+                clearCartItems()
 
                 if (result == true) {
                     console.log("You pressed OK!")
@@ -179,33 +138,15 @@ function addPurchase(callback) {
     })
 }
 
-function getDate() {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1; //January is 0!
-    var yyyy = today.getFullYear();
-
-    if(dd<10) {
-        dd = '0'+dd
-    } 
-
-    if(mm<10) {
-        mm = '0'+mm
-    } 
-
-    return (dd + '/' + mm + '/' + yyyy)
-}
-
+// HTML elements
 function addRow(id, image, name, price, totalAmount, userAmount) {
 
     console.log("ID do produto: " + id)
-    //console.log("Total em estoque: " + totalAmount)
-    //console.log("Total no carrinho do usuário: " + userAmount)
 
     let imgTag = '<img class="product-img" src="images/' + image +'" alt="...">'
     let amountInput = '<input type="number" value="' + userAmount + '" min="1" max="' + totalAmount + '" onclick="inputChanged('+ id +', this)" />'
     let totalPrice = price * userAmount
-    let delBtn = '<button type="button" class="btn btn-xs btn-danger" onclick="deleteItem('+ id +', this)" href="#myModal" >Remover</button>'
+    let delBtn = '<button type="button" class="btn btn-xs btn-danger" onclick="deleteItem('+ id +', this)" href="#modalDelete" >Remover</button>'
 
     var t = "";
 
@@ -227,7 +168,7 @@ function removeRow(row) {
 }
 
 function deleteItem(id, element) {
-
+    
     let row = element.parentNode.parentNode.rowIndex - 1
     
     var clickedItem = getTableClickedItem(element)
@@ -262,18 +203,6 @@ function deleteItem(id, element) {
         
         updateCartTotalValue()
     }
-}
-
-function updateLocalStorage(allItems) {
-    console.log("Updating local storage")
-
-    var jsonString = JSON.stringify(allItems);
-
-    console.log("JSON string: " + jsonString)
-
-    localStorage.cart = jsonString
-
-    updateCartItemsCountInNavigationBar()
 }
 
 function inputChanged(id, element) {
@@ -331,14 +260,6 @@ function getCartTotalPrice() {
     return total
 }
 
-function formatMoney(num) {
-    return "R$ " + num.toFixed(2).toString().replace(".", ",");
-}
-
-function formatNumber(money) {
-    return Number(money.replace("R$ ", "").replace(",", "."));
-}
-
 function getTableClickedItem(element) {
     let row = element.parentNode.parentNode.rowIndex - 1
     let column = element.parentNode.cellIndex
@@ -348,6 +269,11 @@ function getTableClickedItem(element) {
 
     return clickedItem;
 }
+
+
+
+
+
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
@@ -369,9 +295,150 @@ window.onclick = function(event) {
 }
 
 
-var menuDefault = document.getElementById('menuDefault')
-var menuUserLoggedIn = document.getElementById('menuUserLoggedIn')
 
+
+
+
+// Handling user registration
+function btnSub() {
+
+    const userPass = document.getElementById('pwd1')
+    const userPassConfirm = document.getElementById('pwd2')
+    const userName = document.getElementById('name')
+    const userAdd = document.getElementById('add')
+    const userCard = document.getElementById('card')
+    const userTel = document.getElementById('tel')
+    const userEmail = document.getElementById('email')
+
+    userPass.parentNode.classList.remove("has-error")
+    userPassConfirm.parentNode.classList.remove("has-error")
+    userName.parentNode.classList.remove("has-error")
+    userAdd.parentNode.classList.remove("has-error")
+    userCard.parentNode.classList.remove("has-error")
+    userTel.parentNode.classList.remove("has-error")
+    userEmail.parentNode.classList.remove("has-error")
+
+    if (validateRegisterFields(userName.value, userAdd.value, userCard.value, userTel.value, userEmail.value, userPass.value, userPassConfirm.value)) {
+        writeUserData(userName.value, userAdd.value, userCard.value, userTel.value, userEmail.value, userPass.value)
+    }
+}
+
+function validateRegisterFields(userNameValue, userAddValue, userCardValue, userTelValue, userEmailValue, userPassValue, userPassConfirmValue) {
+
+    // Validating empty fields
+    var thereIsEmptyField = false
+    if (userNameValue.trim() === '') {
+        thereIsEmptyField = true
+        userName.parentNode.classList.add("has-error")
+    }
+
+    if (userAddValue.trim() === '') {
+        thereIsEmptyField = true
+        userAdd.parentNode.classList.add("has-error")
+    }
+
+    if (userCardValue.trim() === '') {
+        thereIsEmptyField = true
+        userCard.parentNode.classList.add("has-error")
+    }
+
+    if (userTelValue.trim() === '') {
+        thereIsEmptyField = true
+        userTel.parentNode.classList.add("has-error")
+    }
+
+    if (userEmailValue.trim() === '') {
+        thereIsEmptyField = true
+        userEmail.parentNode.classList.add("has-error")
+    }
+
+    if (userPassValue.trim() === '') {
+        thereIsEmptyField = true
+        userPass.parentNode.classList.add("has-error")
+    }
+
+    if (userPassConfirmValue.trim() === '') {
+        thereIsEmptyField = true
+        userPassConfirm.parentNode.classList.add("has-error")
+    }
+
+    if (thereIsEmptyField) {
+        alert("Há campos vazios que precisam ser preenchidos!")
+        return false
+    } else {
+
+        if (!isNaN(parseFloat(userNameValue))) {
+
+            userName.parentNode.classList.add("has-error")
+            alert('Nome digitado é inválido!')
+
+            return false
+
+        } else if (!isNaN(parseFloat(userEmailValue))) {
+
+            userEmail.parentNode.classList.add("has-error")
+            alert('E-mail digitado é inválido')
+
+            return false
+
+        } else if (userPassValue != userPassConfirmValue) {
+
+            userPass.parentNode.classList.add("has-error")
+            userPassConfirm.parentNode.classList.add("has-error")
+            alert("Senhas não conferem!")
+
+            return false
+        }
+    }
+
+    return true
+}
+
+function writeUserData(userName, userAdd, userCard, userTel, userEmail, userPass) {
+
+    var newId = 0
+    firebase.database().ref('users/').once('value').then(function (snapshot) {
+        newId = snapshot.val().length
+
+        database.ref('users/' + newId).set({
+            username: userName,
+            address: userAdd,
+            card: userCard,
+            phone: userTel,
+            email: userEmail,
+            pass: userPass
+        })
+    }).then(function () {
+
+        console.log("Cadastro realizado com sucesso!")
+
+        // Closing modal
+        const modalRegister = document.getElementById('modalRegister');
+        modalRegister.style.display = 'none';
+
+        var doc = content.document;
+        var body = doc.body;
+        var div = doc.getElementsByClassName("modal-backdrop");
+
+        // Removing dimmer
+        body.className = '';
+        body.removeChild(div[0]);
+
+        // Logging
+        setUserIdLogged(newId)
+
+        // Update dropdown
+        updateNavBarMenu()
+
+        // Feedback to user
+        alert("Olá " + userName + "!")
+
+    }).catch(function (error) {
+        alert("Data could not be saved.\n" + error);
+    })
+}
+
+// Handling user login
 var userEmailL = document.getElementById('emailL')
 var userPassL = document.getElementById('pwdL')
 
@@ -383,6 +450,11 @@ function btnLogin() {
 }
 
 function loginUserData(userEmailValue, userPassValue) {
+
+    let modalLogin = document.getElementById('modalLogin');
+
+    console.log("Logging with \"" + userEmailValue + "\"")
+
     userPassL.parentNode.classList.remove("has-error")
     userEmailL.parentNode.classList.remove("has-error")
 
@@ -396,7 +468,13 @@ function loginUserData(userEmailValue, userPassValue) {
                 // Email exists on database.
 
                 // Check password
-                var storedPass = snapshot.val()[0].pass
+                var user
+                var userId
+                for(var i in snapshot.val()) {
+                    user = snapshot.val()[i]
+                    userId = i
+                }
+                var storedPass = user.pass
 
                 if (storedPass == userPassValue) {
                     console.log("Login")
@@ -412,11 +490,10 @@ function loginUserData(userEmailValue, userPassValue) {
                     body.className = '';
                     body.removeChild(div[0]);
 
-                    var userId = snapshot.val()[0].id
                     setUserIdLogged(userId)
                     updateNavBarMenu()
 
-                    alert("Olá " + snapshot.val()[0].name + "!")
+                    alert("Olá " + user.username + "!")
 
                 } else {
                     console.log("Wrong password")
@@ -430,10 +507,231 @@ function loginUserData(userEmailValue, userPassValue) {
         });
 }
 
+// Handling user edit
+function loadEdUser() {
+    var name = document.getElementById('nameEdit')
+    var add = document.getElementById('addEdit')
+    var card = document.getElementById('cardEdit')
+    var phone = document.getElementById('telEdit')
+    var email = document.getElementById('emailEdit')
+
+    var userId = getUserIdLogged()
+
+    database.ref('users/' + userId)
+        .once('value', function (snapshot) {
+
+            var user = snapshot.val()
+            
+            name.value = user.username
+            add.value = user.address
+            card.value = user.card
+            phone.value = user.phone
+            email.value = user.email
+        })
+}
+
+function btnEdUser() {
+    var name = document.getElementById('nameEdit')
+    var add = document.getElementById('addEdit')
+    var card = document.getElementById('cardEdit')
+    var phone = document.getElementById('telEdit')
+    var email = document.getElementById('emailEdit')
+    var pwdCurrent = document.getElementById('pwd1Edit')
+    var pwdNew = document.getElementById('pwd2Edit')
+    var pwdConfirmNew = document.getElementById('pwd3Edit')
+
+    name.parentNode.classList.remove("has-error")
+    add.parentNode.classList.remove("has-error")
+    card.parentNode.classList.remove("has-error")
+    phone.parentNode.classList.remove("has-error")
+    email.parentNode.classList.remove("has-error")
+    pwdCurrent.parentNode.classList.remove("has-error")
+    pwdNew.parentNode.classList.remove("has-error")
+    pwdConfirmNew.parentNode.classList.remove("has-error")
+
+    var userId = getUserIdLogged()
+
+    database.ref('users/' + userId)
+        .once('value', function (snapshot) {
+
+            var user = snapshot.val()
+
+            var pass
+
+            if(pwdNew.value != '') {
+                pass = pwdNew
+            } else {
+                pass = pwdCurrent
+            }
+
+            if(validateEditFields(user.pass)) {
+                snapshot.ref.update({
+                    userame: name.value,
+                    address: add.value,
+                    card: card.value,
+                    phone: phone.value,
+                    email: email.value,
+                    pass: pass
+                })
+            }
+        })
+        
+}
+
+function validateEditFields(storedUserPwd) {
+
+    console.log(storedUserPwd)
+
+    var userName = document.getElementById('nameEdit')
+    var userAdd = document.getElementById('addEdit')
+    var userCard = document.getElementById('cardEdit')
+    var userPhone = document.getElementById('telEdit')
+    var userEmail = document.getElementById('emailEdit')
+    var userPwdCurrent = document.getElementById('pwd1Edit')
+    var userPwdNew = document.getElementById('pwd2Edit')
+    var userPwdNewConfirm = document.getElementById('pwd3Edit')
+
+    var userNameValue = userName.value
+    var userAddValue = userAdd.value
+    var userCardValue = userCard.value
+    var userPhoneValue = userPhone.value
+    var userEmailValue = userEmail.value
+    var userPwdCurrentValue = userPwdCurrent.value
+    var userPwdNewValue = userPwdNew.value
+    var userPwdNewConfirmValue = userPwdNewConfirm.value
+
+    // Validating empty fields
+    var thereIsEmptyField = false
+    if (userNameValue.trim() === '') {
+        thereIsEmptyField = true
+        userName.parentNode.classList.add("has-error")
+    }
+
+    if (userAddValue.trim() === '') {
+        thereIsEmptyField = true
+        userAdd.parentNode.classList.add("has-error")
+    }
+
+    if (userCardValue.trim() === '') {
+        thereIsEmptyField = true
+        userCard.parentNode.classList.add("has-error")
+    }
+
+    if (userPhoneValue.trim() === '') {
+        thereIsEmptyField = true
+        userPhone.parentNode.classList.add("has-error")
+    }
+
+    if (userEmailValue.trim() === '') {
+        thereIsEmptyField = true
+        userEmail.parentNode.classList.add("has-error")
+    }
+
+    if (userPwdCurrentValue.trim() === '') {
+        thereIsEmptyField = true
+        userPwdCurrent.parentNode.classList.add("has-error")
+    }
+
+    if (thereIsEmptyField) {
+        alert("Há campos vazios que precisam ser preenchidos!")
+        return false
+    } else {
+
+        if (!isNaN(parseFloat(userNameValue))) {
+
+            userName.parentNode.classList.add("has-error")
+            alert('Nome digitado é inválido!')
+
+            return false
+
+        } else if (!isNaN(parseFloat(userEmailValue))) {
+
+            userEmail.parentNode.classList.add("has-error")
+            alert('E-mail digitado é inválido')
+
+            return false
+
+        } else if (userPwdCurrentValue != storedUserPwd) {
+
+            userPwdCurrent.parentNode.classList.add("has-error")
+            alert("Senha atual inválida")
+
+            return false
+        } else if ((userPwdNewValue != '' || userPwdNewConfirm != '')
+                && (userPwdNewValue != userPwdNewConfirmValue)) {
+
+            userPwdNew.parentNode.classList.add("has-error")
+            userPwdNewConfirm.parentNode.classList.add("has-error")
+            alert("Senhas não conferem!")
+
+            return false
+        }
+    }
+
+    return true
+}
+
+// Handling cart in local storage
+updateCartItemsCountInNavigationBar()
+
+function updateCartItemsCountInNavigationBar() {
+    let itemsCount = getCartItemsCount();
+
+    let badgeCart = document.getElementById('badgeCart')
+    badgeCart.innerHTML = itemsCount
+}
+
+function updateLocalStorage(allItems) {
+    console.log("Updating local storage")
+
+    var jsonString = JSON.stringify(allItems);
+
+    localStorage.cart = jsonString
+
+    updateCartItemsCountInNavigationBar()
+}
+
+function getCartItemsCount() {
+
+    var currentCartItems = localStorage.cart
+    var currentCartItemsCount = 0
+
+    if (currentCartItems) {
+
+        var allItems = new Array()
+        allItems = JSON.parse(localStorage.cart)
+
+        currentCartItemsCount = allItems.length
+    }
+
+    return currentCartItemsCount
+}
+
+function getAllUserCartItems(callback) {
+
+    var currentCartItems = localStorage.cart
+
+    if(currentCartItems) {
+
+        var allItems = new Array()
+        allItems = JSON.parse(localStorage.cart)
+
+        return allItems
+    }
+}
+
+function clearCartItems() {
+    localStorage.removeItem("cart");
+}
+
+// Updating dropdown nav bar menu
 updateNavBarMenu()
+
 function updateNavBarMenu() {
 
-    // Handling user login
+    let menuDefault = document.getElementById('menuDefault')
+    let menuUserLoggedIn = document.getElementById('menuUserLoggedIn')
+
     if (loggedUserId = getUserIdLogged()) {
         console.log("The user with ID " + loggedUserId + "is logged")
 
@@ -448,12 +746,22 @@ function updateNavBarMenu() {
     }
 }
 
+// Handling user login
 function getUserIdLogged() {
-    return sessionStorage.loggedUserId
+
+    let userID = sessionStorage.loggedUserId
+
+    if(userID) {
+        return userID
+    } else {
+        return null
+    }
 }
 
 function setUserIdLogged(userId) {
-    sessionStorage.loggedUserId = userId
+    if(userId != null) {
+        sessionStorage.loggedUserId = userId
+    }
 }
 
 function logout() {
@@ -461,4 +769,38 @@ function logout() {
     updateNavBarMenu()
 
     console.log("You have successfully logout!")
+}
+
+// Checking if browser can use local storage
+
+if (typeof (Storage) !== "undefined") {
+    console.log("Local Storage can be used")
+} else {
+    console.log("Local Storage cannot be used.")
+}
+
+// Utils
+function formatMoney(num) {
+    return "R$ " + num.toFixed(2).toString().replace(".", ",");
+}
+
+function formatNumber(money) {
+    return Number(money.replace("R$ ", "").replace(",", "."));
+}
+
+function getDate() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd = '0'+dd
+    } 
+
+    if(mm<10) {
+        mm = '0'+mm
+    } 
+
+    return (dd + '/' + mm + '/' + yyyy)
 }
