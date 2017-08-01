@@ -98,14 +98,18 @@ function btnDel() {
 
 // EDIT
 function searchProduct() {
-  
+
   var name = document.getElementById('editName').value
-  
+
   database.ref('products/').orderByChild('name').equalTo(name).once('value', function (snapshot) {
 
     var product
     for(var i in snapshot.val()) {
       product = snapshot.val()[i]
+      document.getElementById('nameE').value = product.name
+      document.getElementById('descE').value = product.description
+      document.getElementById('prcE').value = product.price
+      document.getElementById('amntE').value = product.amount
     }
   }).then(function() {
 
@@ -116,30 +120,35 @@ function searchProduct() {
         url: 'adm.html'
       }
     );});
-
-    // Carregar dados no novo modal
-    document.getElementById('amntE').value = "Caroline"
   })
 }
 
 function btnEd() {
-
   var amnt = document.getElementById('amntE').value
   var desc = document.getElementById('descE').value
   var image = document.getElementById('imgE').value
   var prodName = document.getElementById('nameE').value
   var prc = document.getElementById('prcE').value
-  var nameToEd = document.getElementById('editName').value
+  var nameP = document.getElementById('editName').value
 
-  database.ref('products/' + Number(id)).orderByChild('name').equalTo(nameToEd).once('value', function (snapshot) {
-    snapshot.ref.update({
-      id: id,
-      amount: amnt,
-      description: desc,
-      imageURL: image,
-      name: prodName,
-      price: prc
-    })
+  database.ref('products/').once('value').then(function (snapshot) {
+      var product
+      var id
+      for (var i in snapshot.val()) {
+        if(snapshot.val()[i].name===nameP){
+          console.log(i)
+          product=snapshot.val()[i]
+          console.log(product)
+          id=i
+        }else{console.log('nao existe')}}
+        database.ref('products/'+id).orderByChild('name').equalTo(nameP).once('value', function (snapshot) {
+        snapshot.ref.update({
+        amount: amnt,
+        description: desc,
+        name: prodName,
+        price: prc
+        })
+      })
   })
 }
 
