@@ -182,7 +182,7 @@ function loginUserData(userEmailValue, userPassValue) {
 
                 if (storedPass == userPassValue) {
                     console.log("Login")
-
+                    if(userEmailValue===admin){window.location.href="adm.html"}else{
                     // Closing modal
                     modalLogin.style.display = 'none';
 
@@ -198,7 +198,7 @@ function loginUserData(userEmailValue, userPassValue) {
                     updateNavBarMenu()
 
                     alert("Olá " + user.username + "!")
-
+                    }
                 } else {
                     console.log("Wrong password")
                     userPassL.parentNode.classList.add("has-error")
