@@ -47,7 +47,7 @@ function listaP() {
 
   clearList()
 
-  database.ref('products/' + Number(id)).once('value').then(function (snapshot) {
+  database.ref('products/').once('value').then(function (snapshot) {
     for (var i in snapshot.val()) {
       //for( i=0;i<snapshot.val().length;i++){
       while (products.length) {
