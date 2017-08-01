@@ -174,31 +174,40 @@ function loginUserData(userEmailValue, userPassValue) {
                 // Check password
                 var user
                 var userId
+
                 for(var i in snapshot.val()) {
                     user = snapshot.val()[i]
                     userId = i
                 }
+
                 var storedPass = user.pass
 
                 if (storedPass == userPassValue) {
+                    
                     console.log("Login")
-                    if(userEmailValue===admin){window.location.href="adm.html"}else{
-                    // Closing modal
-                    modalLogin.style.display = 'none';
 
-                    var doc = content.document;
-                    var body = doc.body;
-                    var div = doc.getElementsByClassName("modal-backdrop");
+                    if(userEmailValue === "admin") {
 
-                    // Removing dimmer
-                    body.className = '';
-                    body.removeChild(div[0]);
+                        window.location.href="adm.html"
 
-                    setUserIdLogged(userId)
-                    updateNavBarMenu()
+                    } else {
+                        // Closing modal
+                        modalLogin.style.display = 'none';
+
+                        var doc = content.document;
+                        var body = doc.body;
+                        var div = doc.getElementsByClassName("modal-backdrop");
+
+                        // Removing dimmer
+                        body.className = '';
+                        body.removeChild(div[0]);
+
+                        setUserIdLogged(userId)
+                        updateNavBarMenu()
+                    }
 
                     alert("Olá " + user.username + "!")
-                    }
+
                 } else {
                     console.log("Wrong password")
                     userPassL.parentNode.classList.add("has-error")
