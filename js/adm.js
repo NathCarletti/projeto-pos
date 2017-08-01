@@ -96,9 +96,34 @@ function btnDel() {
   })
 }
 
-//Catch name to be edited and EDIT
+// EDIT
+function searchProduct() {
+  
+  var name = document.getElementById('editName').value
+  
+  database.ref('products/').orderByChild('name').equalTo(name).once('value', function (snapshot) {
+
+    var product
+    for(var i in snapshot.val()) {
+      product = snapshot.val()[i]
+    }
+  }).then(function() {
+
+    // Open modal
+    $(document).ready(function() {
+      $('#myModal1').modal(
+      {
+        url: 'adm.html'
+      }
+    );});
+
+    // Carregar dados no novo modal
+    document.getElementById('amntE').value = "Caroline"
+  })
+}
+
 function btnEd() {
-  var id = document.getElementById('idE').value
+
   var amnt = document.getElementById('amntE').value
   var desc = document.getElementById('descE').value
   var image = document.getElementById('imgE').value
@@ -106,7 +131,6 @@ function btnEd() {
   var prc = document.getElementById('prcE').value
   var nameToEd = document.getElementById('editName').value
 
-  console.log(nameToEd)
   database.ref('products/' + Number(id)).orderByChild('name').equalTo(nameToEd).once('value', function (snapshot) {
     snapshot.ref.update({
       id: id,
