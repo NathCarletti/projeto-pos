@@ -30,7 +30,7 @@ function writeProductData(amnt, desc, image, prodName, prc) {
         price: formatNumber(prc)
 
       }).then(function () {
-        
+
         alert("\"" + prodName + "\"" + " cadastrado com sucesso!!")
 
       })
@@ -41,21 +41,16 @@ function writeProductData(amnt, desc, image, prodName, prc) {
 var products = new Array();
 function listaP() {
   var i = 0
+  clearList()
   while (products.length) {
     products.pop()
   }
 
-  clearList()
-
   database.ref('products/').once('value').then(function (snapshot) {
     for (var i in snapshot.val()) {
-      //for( i=0;i<snapshot.val().length;i++){
       while (products.length) {
         products.pop()
       }
-      console.log(snapshot.val())
-      console.log(products)
-      console.log(i)
       products.push(snapshot.val()[i].amount)
       products.push(snapshot.val()[i].description)
       products.push(snapshot.val()[i].name)
@@ -64,7 +59,6 @@ function listaP() {
       listProductData(products)
       while (products.length) {
         products.pop()
-        console.log(products)
       }
     }
   })
@@ -72,18 +66,25 @@ function listaP() {
 //CREATE list
 function listProductData(products) {
   var ul = document.getElementById('lista')
-  var newLi = document.createElement('li')
+  /*var newLi = document.createElement('li')
   var liContent = document.createTextNode(products)
 
   newLi.appendChild(liContent)
-  ul.appendChild(newLi)
+  ul.appendChild(newLi)*/
+  var l = "";
+  var li = '<ul tag>';
+    li += '<li class="text-center">' + products + '</li>';
+    li += '</ul>';
+    l += li;
+    ul.innerHTML += l;
 }
 //CLEAR list before generate another
 function clearList() {
-  var ul = document.getElementById('lista')
+ var ul = document.getElementById('lista')
   var list = document.getElementsByTagName('li')
-  for (var i = 0; i < ul.children.length; i++) {
+  for (var i = 1; i < ul.children.length; i++) {
     ul.removeChild(ul.children[i])
+    console.log(i)
   }
 }
 
@@ -140,7 +141,7 @@ function btnEd() {
           product=snapshot.val()[i]
           console.log(product)
           id=i
-        }else{console.log('nao existe')}}
+        }else{console.log('nao existe')}}//passar para de cima
         database.ref('products/'+id).orderByChild('name').equalTo(nameP).once('value', function (snapshot) {
         snapshot.ref.update({
         amount: amnt,

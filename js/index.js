@@ -288,7 +288,6 @@ function btnEdUser() {
                 })
             }
         })
-        
 }
 
 function validateEditFields(storedUserPwd) {
