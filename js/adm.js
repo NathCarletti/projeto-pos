@@ -37,7 +37,7 @@ function listaP(){
               products.pop()
             }
     clearList()
-    database.ref('products/').once('value').then(function(snapshot) {
+    database.ref('products/'+ Number(id)).once('value').then(function(snapshot) {
       for(var i in snapshot.val()){
        //for( i=0;i<snapshot.val().length;i++){
         while(products.length){
@@ -86,11 +86,7 @@ function btnDel(){
   })
 }
 
-//Catch name to be edited
-function nextEdit(){
-    var nameToEd = document.getElementById('editName').value
-   
-}
+//Catch name to be edited and EDIT
  function btnEd(){
       var id= document.getElementById('idE').value
       var amnt=document.getElementById('amntE').value
@@ -98,9 +94,10 @@ function nextEdit(){
       var image = document.getElementById('imgE').value
       var prodName= document.getElementById('nameE').value
       var prc = document.getElementById('prcE').value
+      var nameToEd = document.getElementById('editName').value
 
-    console.log(name)
-    /*database.ref('products/').orderByChild('name').equalTo(nameToEd).on('child_changed', (snapshot) => {
+    console.log(nameToEd)
+    database.ref('products/'+ Number(id)).orderByChild('name').equalTo(nameToEd).once('value', function (snapshot){
       snapshot.ref.update({
         id: id,
         amount: amnt,
@@ -109,17 +106,8 @@ function nextEdit(){
         name: prodName,
         price: prc
       })
-  })*/
+  })
 }
-
-  //var ref = firebase.database().ref('products/');
-  //ref.orderByChild('name').equalTo(name).once("value", function(snapshot){
-    // var updates = {};
-      //snapshot.forEach(function(child){
-        //  updates[child.name] = null;
-     //});
-     //ref.update(updates);
-//});
 
 function formatNumber(money) {
     return Number(money.replace("R$ ", "").replace(",", "."));
