@@ -2,7 +2,7 @@
 <html lang="pt">
 
 <head>
-    <title>Petshop - Administrador</title>
+    <title>Pet Shop - Administrador</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/chart.js"></script>
@@ -43,34 +43,30 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Adicionar Produto</h4>
                 </div>
                 <div class="modal-body">
                     <form id="frm2" action="/action_page.php">
                         <div class="form-group">
-                            <label for="id">Id:</label>
-                            <input type="id" class="form-control" id="id">
-                        </div>
-                        <div class="form-group">
-                            <label for="amnt">Quantidade:</label>
-                            <input type="amnt" class="form-control" id="amnt">
+                            <label for="name">Nome:</label>
+                            <input type="name" class="form-control" id="name">
                         </div>
                         <div class="form-group">
                             <label for="desc">Descrição:</label>
                             <input type="desc" class="form-control" id="desc">
                         </div>
                         <div class="form-group">
-                            <label for="img">imagemURL:</label>
-                            <input type="img" class="form-control" id="img">
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Nome:</label>
-                            <input type="name" class="form-control" id="name">
-                        </div>
-                        <div class="form-group">
                             <label for="prc">Preço:</label>
                             <input type="prc" class="form-control" id="prc">
+                        </div>
+                        <div class="form-group">
+                            <label for="amnt">Quantidade em estoque:</label>
+                            <input type="amnt" class="form-control" id="amnt">
+                        </div>
+                        <div class="form-group">
+                            <label for="img">imagemURL:</label>
+                            <input type="img" class="form-control" id="img">
                         </div>
                     </form>
                 </div>
@@ -78,17 +74,14 @@
                     <button type="submit" id="btnSub" class="btn btn-default" data-dismiss="modal" onClick="btnConfirm()">Confirmar</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Sair</button>
-            </div>
         </div>
     </div>
     
     <div class="modal fade" id="edit" role="dialog">
         <div class="modal-dialog">
-            <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Editar Produto</h4>
                 </div>
                 <div class="modal-body">
@@ -106,10 +99,9 @@
 
     <div class="modal fade" id="del" role="dialog">
         <div class="modal-dialog">
-            <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Deletar Produto</h4>
                 </div>
                 <div class="modal-body">
@@ -129,34 +121,30 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Editar Produto</h4>
                 </div>
                 <div class="modal-body">
                     <form id="frm2" action="/action_page.php">
                         <div class="form-group">
-                            <label for="id">Id:</label>
-                            <input type="id" class="form-control" id="idE">
-                        </div>
-                        <div class="form-group">
-                            <label for="amnt">Quantidade:</label>
-                            <input type="amnt" class="form-control" id="amntE">
+                            <label for="name">Nome:</label>
+                            <input type="name" class="form-control" id="nameE">
                         </div>
                         <div class="form-group">
                             <label for="desc">Descrição:</label>
                             <input type="desc" class="form-control" id="descE">
                         </div>
                         <div class="form-group">
-                            <label for="img">imagemURL:</label>
-                            <input type="img" class="form-control" id="imgE">
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Nome:</label>
-                            <input type="name" class="form-control" id="nameE">
-                        </div>
-                        <div class="form-group">
                             <label for="prc">Preço:</label>
                             <input type="prc" class="form-control" id="prcE">
+                        </div>
+                        <div class="form-group">
+                            <label for="amnt">Quantidade em estoque:</label>
+                            <input type="amnt" class="form-control" id="amntE">
+                        </div>
+                        <div class="form-group">
+                            <label for="img">imagemURL:</label>
+                            <input type="img" class="form-control" id="imgE">
                         </div>
                     </form>
                 </div>

@@ -1,114 +1,124 @@
 var database = firebase.database()
+
 //ADD PRODUCT
-function btnConfirm(){
-    var id= document.getElementById('id').value
-    var amnt=document.getElementById('amnt').value
-    var desc = document.getElementById('desc').value
-    var image = document.getElementById('img').value
-    var prodName= document.getElementById('name').value
-    var prc = document.getElementById('prc').value
+function btnConfirm() {
 
-    writeProductData(id, amnt, desc, image, prodName, prc);
-		userName.value='';
-		userAdd.value='';
-		userCard.value='';
-		userTel.value='';
-		userEmail.value='';
-		userName.focus();
+  var amnt = document.getElementById('amnt').value
+  var desc = document.getElementById('desc').value
+  var image = document.getElementById('img').value
+  var prodName = document.getElementById('name').value
+  var prc = document.getElementById('prc').value
+
+  //userName.focus();
+
+  writeProductData(amnt, desc, image, prodName, prc);
 }
-//WRITE on Firebase
-function writeProductData(id, amnt, desc, image, prodName, prc) {
-  database.ref('/products/' + Number(id)).set({
-    amount: Number(amnt),
-    description: desc,
-    imageURL: image,
-    name: prodName,
-    price: formatNumber(prc)
-  });
 
-console.log('oi')
+//WRITE on Firebase
+function writeProductData(amnt, desc, image, prodName, prc) {
+
+  database.ref('products/').once('value').then(function (snapshot) {
+
+    var newId = snapshot.numChildren()
+
+    database.ref('/products/' + Number(newId)).set({
+        
+        amount: Number(amnt),
+        description: desc,
+        imageURL: image,
+        name: prodName,
+        price: formatNumber(prc)
+
+      }).then(function () {
+        
+        alert("\"" + prodName + "\"" + " cadastrado com sucesso!!")
+
+      })
+  })
 }
 
 //LIST product
 var products = new Array();
-function listaP(){
-  var i=0
-  while(products.length){
-              products.pop()
-            }
-    clearList()
-    database.ref('products/'+ Number(id)).once('value').then(function(snapshot) {
-      for(var i in snapshot.val()){
-       //for( i=0;i<snapshot.val().length;i++){
-        while(products.length){
-              products.pop()
-            }
-            console.log(snapshot.val())
-            console.log(products)
-            console.log(i)
-            products.push(snapshot.val()[i].amount)
-            products.push(snapshot.val()[i].description)
-            products.push(snapshot.val()[i].name)
-            products.push(snapshot.val()[i].price)
+function listaP() {
+  var i = 0
+  while (products.length) {
+    products.pop()
+  }
 
-            listProductData(products)
-            while(products.length){
-              products.pop()
-              console.log(products)
-            }
+  clearList()
+
+  database.ref('products/' + Number(id)).once('value').then(function (snapshot) {
+    for (var i in snapshot.val()) {
+      //for( i=0;i<snapshot.val().length;i++){
+      while (products.length) {
+        products.pop()
       }
-    })
+      console.log(snapshot.val())
+      console.log(products)
+      console.log(i)
+      products.push(snapshot.val()[i].amount)
+      products.push(snapshot.val()[i].description)
+      products.push(snapshot.val()[i].name)
+      products.push(snapshot.val()[i].price)
+
+      listProductData(products)
+      while (products.length) {
+        products.pop()
+        console.log(products)
+      }
+    }
+  })
 }
 //CREATE list
-function listProductData(products){
-		var ul = document.getElementById('lista')
-		var newLi = document.createElement('li')
-		var liContent = document.createTextNode(products)
+function listProductData(products) {
+  var ul = document.getElementById('lista')
+  var newLi = document.createElement('li')
+  var liContent = document.createTextNode(products)
 
-		newLi.appendChild(liContent)
-		ul.appendChild(newLi)
+  newLi.appendChild(liContent)
+  ul.appendChild(newLi)
 }
 //CLEAR list before generate another
-function clearList(){
+function clearList() {
   var ul = document.getElementById('lista')
   var list = document.getElementsByTagName('li')
-  for(var i=0;i<ul.children.length;i++){
+  for (var i = 0; i < ul.children.length; i++) {
     ul.removeChild(ul.children[i])
   }
 }
 
 //DELETE object from Firebase
-function btnDel(){
+function btnDel() {
   var name = document.getElementById('pName').value
   console.log(name)
-    database.ref('products/').orderByChild('name').equalTo(name).on('child_added', (snapshot) => {
-     snapshot.ref.remove()
+  database.ref('products/').orderByChild('name').equalTo(name).on('child_added', (snapshot) => {
+    snapshot.ref.remove()
   })
 }
 
 //Catch name to be edited and EDIT
- function btnEd(){
-      var id= document.getElementById('idE').value
-      var amnt=document.getElementById('amntE').value
-      var desc = document.getElementById('descE').value
-      var image = document.getElementById('imgE').value
-      var prodName= document.getElementById('nameE').value
-      var prc = document.getElementById('prcE').value
-      var nameToEd = document.getElementById('editName').value
+function btnEd() {
+  var id = document.getElementById('idE').value
+  var amnt = document.getElementById('amntE').value
+  var desc = document.getElementById('descE').value
+  var image = document.getElementById('imgE').value
+  var prodName = document.getElementById('nameE').value
+  var prc = document.getElementById('prcE').value
+  var nameToEd = document.getElementById('editName').value
 
-    console.log(nameToEd)
-    database.ref('products/'+ Number(id)).orderByChild('name').equalTo(nameToEd).once('value', function (snapshot){
-      snapshot.ref.update({
-        id: id,
-        amount: amnt,
-        description: desc,
-        imageURL: image,
-        name: prodName,
-        price: prc
-      })
+  console.log(nameToEd)
+  database.ref('products/' + Number(id)).orderByChild('name').equalTo(nameToEd).once('value', function (snapshot) {
+    snapshot.ref.update({
+      id: id,
+      amount: amnt,
+      description: desc,
+      imageURL: image,
+      name: prodName,
+      price: prc
+    })
   })
 }
 
 function formatNumber(money) {
-    return Number(money.replace("R$ ", "").replace(",", "."));
+  return Number(money.replace("R$ ", "").replace(",", "."));
 }
