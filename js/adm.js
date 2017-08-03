@@ -100,28 +100,75 @@ function btnDel() {
 // EDIT
 function searchProduct() {
 
-  var name = document.getElementById('editName').value
-
-  database.ref('products/').orderByChild('name').equalTo(name).once('value', function (snapshot) {
-
+  if (editSelectedId != null) {
+  
     var product
-    for(var i in snapshot.val()) {
-      product = snapshot.val()[i]
-      document.getElementById('nameE').value = product.name
-      document.getElementById('descE').value = product.description
-      document.getElementById('prcE').value = product.price
-      document.getElementById('amntE').value = product.amount
-    }
-  }).then(function() {
+    database.ref('products/' + editSelectedId)
+    .once('value', function (snapshot) {
 
-    // Open modal
-    $(document).ready(function() {
-      $('#myModal1').modal(
-      {
-        url: 'adm.html'
+        product = snapshot.val()
+
+        document.getElementById('nameE').value = product.name
+        document.getElementById('descE').value = product.description
+        document.getElementById('prcE').value = product.price
+        document.getElementById('amntE').value = product.amount
+        
+    }).then(function() {
+
+      if(product != null) {
+        // Open modal
+        $(document).ready(function() {
+          $('#myModal1').modal(
+          {
+            url: 'adm.html'
+          }
+        )})
+
+        $('#edit').modal('toggle');
+
+      } else {
+        alert("Produto não encontrado.")
       }
-    );});
+    })
+  } else {
+    alert('Selecione um produto para editar!')
+  }
+}
+
+var allItems;
+var editSelectedId;
+function getProducts() {
+
+  editSelectedId = null
+
+  var dropdownEdit = document.getElementById('dropdownEdit')
+  dropdownEdit.innerHTML = "";
+
+  database.ref('products/').once('value').then(function (snapshot) {
+
+    allItems = snapshot.val()
+    for(var i in allItems) {
+      var listItem = '<button id="editItemId' + i + '" class="list-group-item" onclick="itemSelected(' + i + ')" >' + allItems[i].name + '</button>'
+
+      dropdownEdit.innerHTML += listItem;
+    }
   })
+}
+
+function itemSelected(selectedId) {
+
+  editSelectedId = selectedId
+
+  // Unselect other items
+  for(var i in allItems) {
+    var item = document.getElementById('editItemId' + i)
+    item.classList.remove('active')
+  }
+
+  // Select item
+  var selectedItem = document.getElementById('editItemId' + selectedId);
+  selectedItem.classList.add('active')
+
 }
 
 function btnEd() {
@@ -130,26 +177,12 @@ function btnEd() {
   var image = document.getElementById('imgE').value
   var prodName = document.getElementById('nameE').value
   var prc = document.getElementById('prcE').value
-  var nameP = document.getElementById('editName').value
-
-  database.ref('products/').once('value').then(function (snapshot) {
-      var product
-      var id
-      for (var i in snapshot.val()) {
-        if(snapshot.val()[i].name===nameP){
-          console.log(i)
-          product=snapshot.val()[i]
-          console.log(product)
-          id=i
-        }else{console.log('nao existe')}}//passar para de cima
-        database.ref('products/'+id).orderByChild('name').equalTo(nameP).once('value', function (snapshot) {
-        snapshot.ref.update({
-        amount: amnt,
-        description: desc,
-        name: prodName,
-        price: prc
-        })
-      })
+  
+  database.ref('products/' + editSelectedId).update({
+    amount: formatNumber(amnt),
+    description: desc,
+    name: prodName,
+    price: formatNumber(prc)
   })
 }
 

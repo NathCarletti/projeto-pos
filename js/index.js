@@ -117,16 +117,7 @@ function writeUserData(userName, userAdd, userCard, userTel, userEmail, userPass
         console.log("Cadastro realizado com sucesso!")
 
         // Closing modal
-        const modalRegister = document.getElementById('modalRegister');
-        modalRegister.style.display = 'none';
-
-        var doc = content.document;
-        var body = doc.body;
-        var div = doc.getElementsByClassName("modal-backdrop");
-
-        // Removing dimmer
-        body.className = '';
-        body.removeChild(div[0]);
+        $('#modalRegister').modal('toggle');
 
         // Logging
         setUserIdLogged(newId)
