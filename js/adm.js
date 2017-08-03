@@ -88,13 +88,23 @@ function clearList() {
   }
 }
 
+var allItems;
+var editSelectedId;
+
 //DELETE object from Firebase
 function btnDel() {
-  var name = document.getElementById('pName').value
-  console.log(name)
-  database.ref('products/').orderByChild('name').equalTo(name).on('child_added', (snapshot) => {
-    snapshot.ref.remove()
-  })
+
+  if(editSelectedId != null) {
+    var res = confirm("Tem certeza que deseja remover este produto?")
+    if(res == true) {
+      database.ref('products/' + editSelectedId).remove()
+
+      $('#del').modal('toggle');
+    }
+
+  } else {
+    alert("Selecione um produto para remover")
+  }
 }
 
 // EDIT
@@ -135,38 +145,49 @@ function searchProduct() {
   }
 }
 
-var allItems;
-var editSelectedId;
-function getProducts() {
+function getProducts(modalType) {
 
   editSelectedId = null
 
-  var dropdownEdit = document.getElementById('dropdownEdit')
-  dropdownEdit.innerHTML = "";
+  var listEdit = document.getElementById('listEdit')
+  var listDelete = document.getElementById('listDelete')
+
+  listEdit.innerHTML = "";
+  listDelete.innerHTML = "";
+
+  var listItems
+  if(modalType == 0) {
+    listItems = listEdit
+  } else if(modalType == 1) {
+    listItems = listDelete
+  }
 
   database.ref('products/').once('value').then(function (snapshot) {
 
     allItems = snapshot.val()
     for(var i in allItems) {
-      var listItem = '<button id="editItemId' + i + '" class="list-group-item" onclick="itemSelected(' + i + ')" >' + allItems[i].name + '</button>'
+      var listItem = '<button id="itemId' + i + '" class="list-group-item" onclick="itemSelected(' + i + ')" >' + allItems[i].name + '</button>'
 
-      dropdownEdit.innerHTML += listItem;
+      listItems.innerHTML += listItem;
     }
   })
 }
 
 function itemSelected(selectedId) {
 
+  console.log(selectedId)
+
   editSelectedId = selectedId
 
   // Unselect other items
   for(var i in allItems) {
-    var item = document.getElementById('editItemId' + i)
+    var item = document.getElementById('itemId' + i)
+    console.log(item)
     item.classList.remove('active')
   }
 
   // Select item
-  var selectedItem = document.getElementById('editItemId' + selectedId);
+  var selectedItem = document.getElementById('itemId' + selectedId);
   selectedItem.classList.add('active')
 
 }

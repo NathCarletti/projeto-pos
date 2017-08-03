@@ -28,9 +28,9 @@
                         
                         <ul class="dropdown-menu">
                             <li><a data-toggle="modal" href="#add">Adicionar</a></li>
-                            <li><a data-toggle="modal" href="#edit" onclick="getProducts()" >Editar</a></li>
+                            <li><a data-toggle="modal" href="#edit" onclick="getProducts(0)" >Editar</a></li>
                             <li><a href="#" onclick="listaP()">Listar</a></li>
-                            <li><a data-toggle="modal" href="#del">Deletar</a></li>
+                            <li><a data-toggle="modal" href="#del" onclick="getProducts(1)" >Deletar</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="index.html" onclick="logout()">Sair</a></li>
                         </ul>
@@ -86,7 +86,7 @@
                     <h4 class="modal-title">Editar Produto</h4>
                 </div>
                 <div id="editModalBody" class="modal-body">
-                    <div id="dropdownEdit" class="list-group"></div>
+                    <div id="listEdit" class="list-group"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info btn-lg" data-toggle="modal" onclick="searchProduct()" >Próximo</button>
@@ -102,14 +102,11 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Deletar Produto</h4>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="pName">Nome do Produto:</label>
-                        <input type="text" class="form-control" id="pName">
-                    </div>
+                <div id="delModalBody" class="modal-body">
+                    <div id="listDelete" class="list-group"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onClick="btnDel()">Deletar</button>
+                    <button type="button" class="btn btn-default" onClick="btnDel()">Deletar</button>
                 </div>
             </div>
         </div>
