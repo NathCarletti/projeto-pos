@@ -8,3 +8,6 @@ Pós Graduação em Desenvolvimento de Aplicações para Dispositivos Móveis e 
 - [Firebase Realtime Database](https://firebase.google.com/docs/database/?hl=pt-br)
 - [Chart.js](http://www.chartjs.org/)
 
+## Login como Administrador para visualizar relatório e realizar CRUD de produtos:
+Email: admin
+Senha: admin
